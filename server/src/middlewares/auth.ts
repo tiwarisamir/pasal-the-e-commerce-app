@@ -12,7 +12,7 @@ export const adminOnly = TryCatch(async (req, res, next) => {
 
   if (user.role !== "admin")
     return next(
-      new ErrorHandler("You are not allowed to access this route", 401)
+      new ErrorHandler("You are not allowed to access this route", 403)
     );
 
   next();

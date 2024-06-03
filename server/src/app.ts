@@ -1,27 +1,36 @@
 import express from "express";
-
 import { connectDB } from "./utils/features.js";
 import { errorMiddleware } from "./middlewares/error.js";
-import dotenv from "dotenv";
+import { config } from "dotenv";
+import NodeCache from "node-cache";
+import morgan from "morgan";
 
 import userRoute from "./routes/user.js";
 import productRoute from "./routes/products.js";
+import orderRoute from "./routes/order.js";
+import paymentRoute from "./routes/payment.js";
+import dashboardRoute from "./routes/stats.js";
 
-dotenv.config({
+config({
   path: "./.env",
 });
 
-const mongoURI = process.env.MONGO_URI;
 const port = process.env.PORT || 3000;
 
-connectDB(mongoURI!);
+connectDB();
+
+export const myCache = new NodeCache();
 
 const app = express();
 
 app.use(express.json());
+app.use(morgan("dev"));
 
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/product", productRoute);
+app.use("/api/v1/order", orderRoute);
+app.use("/api/v1/payment", paymentRoute);
+app.use("/api/v1/dashboard", dashboardRoute);
 
 app.get("/", (req, res) => {
   res.send("Hello there");
