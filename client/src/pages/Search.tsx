@@ -1,8 +1,15 @@
 import { useState } from "react";
 import ProductCard from "../components/ProductCard";
-import { useCategoriesQuery } from "../redux/api/productAPI";
+import {
+  useCategoriesQuery,
+  useSearchProductQuery,
+} from "../redux/api/productAPI";
 import { CustomError } from "../types/api-types";
 import toast from "react-hot-toast";
+import { Skeleton } from "../components/Loader";
+import { CartItem } from "../types/types";
+import { addToCart } from "../redux/reducer/cartReducer";
+import { useDispatch } from "react-redux";
 
 const Search = () => {
   const {
@@ -18,12 +25,32 @@ const Search = () => {
   const [category, setCategory] = useState("");
   const [page, setPage] = useState(1);
 
-  const addtoCartHandler = () => {};
+  const {
+    isLoading: productLoading,
+    data: searchData,
+    isError: productIsError,
+    error: productError,
+  } = useSearchProductQuery({
+    search,
+    sort,
+    category,
+    page,
+    price: maxPrice,
+  });
+
+  const dispatch = useDispatch();
+
+  const addtoCartHandler = (cartItem: CartItem) => {
+    if (cartItem.stock < 1) return toast.error("Out of Stock");
+    dispatch(addToCart(cartItem));
+    toast.success("Added to cart");
+  };
 
   const isPrevPage = page > 1;
-  const isNextPage = page < 4;
+  const isNextPage = page < searchData?.totalPage!;
 
   if (isError) toast.error((error as CustomError).data.message);
+  if (productIsError) toast.error((productError as CustomError).data.message);
 
   return (
     <div className="product-search-page">
@@ -55,9 +82,13 @@ const Search = () => {
             value={category}
             onChange={(e) => setCategory(e.target.value)}
           >
-            <option value="">All</option>
-            <option value="asc">Sample1</option>
-            <option value="dsc">Sample2</option>
+            <option value="">ALL</option>
+            {!loadingCategories &&
+              categoriesResponse?.categories.map((i) => (
+                <option key={i} value={i}>
+                  {i.toUpperCase()}
+                </option>
+              ))}
           </select>
         </div>
       </aside>
@@ -70,34 +101,43 @@ const Search = () => {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <div className="search-product-list">
-          <ProductCard
-            productId="sdfwesads"
-            name="laptop"
-            price={999}
-            stock={444}
-            handler={addtoCartHandler}
-            photo="https://static-01.daraz.com.np/p/12f269cac9ccb49bc9dee129eef85f25.jpg_300x0q75.webp"
-          />
-        </div>
+        {productLoading ? (
+          <Skeleton />
+        ) : (
+          <div className="search-product-list">
+            {searchData?.products.map((i) => (
+              <ProductCard
+                key={i._id}
+                productId={i._id}
+                name={i.name}
+                price={i.price}
+                stock={i.stock}
+                handler={addtoCartHandler}
+                photo={i.photo}
+              />
+            ))}
+          </div>
+        )}
 
-        <article>
-          <button
-            disabled={!isPrevPage}
-            onClick={() => setPage((prev) => prev - 1)}
-          >
-            Prev
-          </button>
-          <span>
-            {page} of {4}
-          </span>
-          <button
-            disabled={!isNextPage}
-            onClick={() => setPage((prev) => prev + 1)}
-          >
-            Next
-          </button>
-        </article>
+        {searchData && searchData.totalPage > 1 && (
+          <article>
+            <button
+              disabled={!isPrevPage}
+              onClick={() => setPage((prev) => prev - 1)}
+            >
+              Prev
+            </button>
+            <span>
+              {page} of {searchData.totalPage}
+            </span>
+            <button
+              disabled={!isNextPage}
+              onClick={() => setPage((prev) => prev + 1)}
+            >
+              Next
+            </button>
+          </article>
+        )}
       </main>
     </div>
   );
