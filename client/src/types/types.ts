@@ -122,6 +122,7 @@ export type Bar = {
   products: number[];
   orders: number[];
 };
+
 export type Line = {
   users: number[];
   products: number[];

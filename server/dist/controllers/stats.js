@@ -131,7 +131,7 @@ export const getDashboardStats = TryCatch(async (req, res, next) => {
                 revenue: orderMonthRevenue,
             },
             userRatio,
-            latestTransactions: modifiedLatestTransactions,
+            latestTransaction: modifiedLatestTransactions,
         };
         myCache.set(key, JSON.stringify(stats));
     }
@@ -170,7 +170,7 @@ export const getPieCharts = TryCatch(async (req, res, next) => {
             shipped: shippedOrder,
             delivered: deliveredOrder,
         };
-        const productCategoriesRatio = await getInventories({
+        const productCategories = await getInventories({
             categories,
             productsCount,
         });
@@ -202,7 +202,7 @@ export const getPieCharts = TryCatch(async (req, res, next) => {
         };
         charts = {
             orderFullfillment,
-            productCategoriesRatio,
+            productCategories,
             stockAvailablity,
             revenueDistribution,
             usersAgeGroup,
@@ -254,7 +254,7 @@ export const getBarCharts = TryCatch(async (req, res, next) => {
         const ordersCount = getChartData({ length: 12, today, docArr: orders });
         charts = {
             users: usersCount,
-            product: productCount,
+            products: productCount,
             orders: ordersCount,
         };
         myCache.set(key, JSON.stringify(charts));

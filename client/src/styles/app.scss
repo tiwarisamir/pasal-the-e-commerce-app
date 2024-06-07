@@ -101,6 +101,14 @@ body {
   }
 }
 
+.not-found {
+  height: 80vh;
+  @include flex(column);
+  > svg {
+    font-size: 10rem;
+  }
+}
+
 .admin-container {
   @include grid(1fr 4fr, 2rem);
   height: 100vh;
