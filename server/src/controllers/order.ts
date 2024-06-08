@@ -76,7 +76,8 @@ export const allOrder = TryCatch(async (req, res, next) => {
 
   if (myCache.has(key)) orders = JSON.parse(myCache.get(key) as string);
   else {
-    orders = await Order.find().populate("user", "name");
+    orders = await Order.find({}).populate("user", "name");
+
     myCache.set(key, JSON.stringify(orders));
   }
 

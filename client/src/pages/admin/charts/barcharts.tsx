@@ -37,8 +37,8 @@ const Barcharts = () => {
           <>
             <section>
               <BarChart
-                data_2={products}
-                data_1={users}
+                data_1={products}
+                data_2={users}
                 labels={last6Months}
                 title_1="Products"
                 title_2="Users"

@@ -1,19 +1,17 @@
+import { useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
+import { Skeleton } from "../../../components/Loader";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
 import { DoughnutChart, PieChart } from "../../../components/admin/Charts";
-import { categories } from "../../../assets/data.json";
-import { useSelector } from "react-redux";
-import { UserReducerInitialState } from "../../../types/reducer-types";
-import { CustomError } from "../../../types/api-types";
-import toast from "react-hot-toast";
 import { usePieQuery } from "../../../redux/api/dashboardAPI";
-import { Skeleton } from "../../../components/Loader";
+import { UserReducerInitialState } from "../../../types/reducer-types";
 
 const PieCharts = () => {
   const { user } = useSelector(
     (state: { userReducer: UserReducerInitialState }) => state.userReducer
   );
 
-  const { isLoading, data, isError, error } = usePieQuery(user?._id!);
+  const { isLoading, data, isError } = usePieQuery(user?._id!);
 
   const order = data?.charts.orderFullfillment!;
   const categories = data?.charts.productCategories!;
@@ -22,10 +20,7 @@ const PieCharts = () => {
   const ageGroup = data?.charts.usersAgeGroup!;
   const adminCustomer = data?.charts.adminCustomer!;
 
-  if (isError) {
-    const err = error as CustomError;
-    toast.error(err.data.message);
-  }
+  if (isError) return <Navigate to={"/admin/dashboard"} />;
   return (
     <div className="admin-container">
       <AdminSidebar />

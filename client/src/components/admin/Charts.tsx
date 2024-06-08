@@ -14,6 +14,7 @@ import {
   Filler,
 } from "chart.js";
 import { Bar, Doughnut, Line, Pie } from "react-chartjs-2";
+import { getLastMonths } from "../../utils/features";
 
 ChartJS.register(
   CategoryScale,
@@ -28,7 +29,7 @@ ChartJS.register(
   Filler
 );
 
-const months = ["January", "February", "March", "April", "May", "June", "July"];
+const { last6Months: months } = getLastMonths();
 
 interface BarChartProps {
   horizontal?: boolean;
