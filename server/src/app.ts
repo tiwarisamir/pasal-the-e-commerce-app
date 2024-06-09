@@ -11,6 +11,7 @@ import productRoute from "./routes/products.js";
 import orderRoute from "./routes/order.js";
 import paymentRoute from "./routes/payment.js";
 import dashboardRoute from "./routes/stats.js";
+import { generateRandomProducts } from "./controllers/products.js";
 
 config({
   path: "./.env",
@@ -27,6 +28,8 @@ const app = express();
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(cors());
+
+// generateRandomProducts(100);
 
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/product", productRoute);

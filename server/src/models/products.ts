@@ -12,7 +12,7 @@ const schema = new mongoose.Schema(
       required: [true, "Please Enter Photo"],
     },
     price: {
-      type: String,
+      type: Number,
       required: [true, "Please Enter Price"],
     },
     stock: {

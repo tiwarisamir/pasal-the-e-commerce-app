@@ -19,7 +19,7 @@ const CartItem = ({
   const { productId, photo, name, price, quantity } = cartItem;
   return (
     <div className="cart-item">
-      <img src={`${SERVER}/${photo}`} alt={name} />
+      <img src={photo} alt={name} />
       <article>
         <Link to={`/product/${productId}`}>{name}</Link>
         <span>रु {price}</span>

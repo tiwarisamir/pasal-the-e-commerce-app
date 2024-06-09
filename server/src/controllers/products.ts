@@ -10,7 +10,7 @@ import ErrorHandler from "../utils/utility-class.js";
 import { rm } from "fs";
 import { myCache } from "../app.js";
 import { invalidateCache } from "../utils/features.js";
-// import { faker } from "@faker-js/faker";
+import { faker } from "@faker-js/faker";
 
 export const newProduct = TryCatch(
   async (req: Request<{}, {}, NewProductRequestBody>, res, next) => {
@@ -216,22 +216,22 @@ export const getAllProducts = TryCatch(
   }
 );
 
-// const generateRandomProducts = async (count: number = 10) => {
-//   const products = [];
+export const generateRandomProducts = async (count: number = 10) => {
+  const products = [];
 
-//   for (let i = 0; i < count; i++) {
-//     const product = {
-//       name: faker.commerce.productName(),
-//       photo: "uploads\\dc5a09c3-c76b-4c98-9d6a-429278555aff.jpg",
-//       price: faker.commerce.price({ min: 1500, max: 80000, dec: 0 }),
-//       stock: faker.commerce.price({ min: 0, max: 100, dec: 0 }),
-//       category: faker.commerce.department(),
-//       createdAt: new Date(faker.date.past()),
-//       updatedAt: new Date(faker.date.recent()),
-//       __v: 0,
-//     };
-//     products.push(product);
-//   }
-//   await Product.create(products);
-//   console.log("Product created successfully");
-// };
+  for (let i = 0; i < count; i++) {
+    const product = {
+      name: faker.commerce.productName(),
+      photo: faker.image.url(),
+      price: Number(faker.commerce.price({ min: 1500, max: 80000, dec: 0 })),
+      stock: Number(faker.commerce.price({ min: 0, max: 100, dec: 0 })),
+      category: faker.commerce.department(),
+      createdAt: new Date(faker.date.past()),
+      updatedAt: new Date(faker.date.recent()),
+      __v: 0,
+    };
+    products.push(product);
+  }
+  await Product.create(products);
+  console.log("Product created successfully");
+};

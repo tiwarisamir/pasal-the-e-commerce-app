@@ -52,6 +52,12 @@ export type Order = {
   _id: string;
 };
 
+export type Coupon = {
+  amount: number;
+  code: string;
+  _id: string;
+};
+
 type CountAndChange = {
   revenue: number;
   product: number;

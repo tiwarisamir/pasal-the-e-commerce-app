@@ -1,6 +1,7 @@
 import {
   Bar,
   CartItem,
+  Coupon,
   Line,
   Order,
   Pie,
@@ -45,6 +46,11 @@ export type CategoriesResponse = {
 
 export type SearchProductsResponse = AllProductsResponse & {
   totalPage: number;
+};
+
+export type AllCouponResponse = {
+  success: boolean;
+  coupon: Coupon[];
 };
 
 export type SearchProductsRequest = {
@@ -125,4 +131,15 @@ export type UpdateOrderRequest = {
 export type DeleteUserRequest = {
   userId: string;
   adminUserId: string;
+};
+
+export type DeleteCouponRequest = {
+  couponId: string;
+  adminUserId: string;
+};
+
+export type CreateCouponRequest = {
+  userId: string;
+  coupon: string;
+  amount: number;
 };

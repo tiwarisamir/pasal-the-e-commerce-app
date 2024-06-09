@@ -1,12 +1,23 @@
 import { FormEvent, useEffect, useState } from "react";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
+import { useSelector } from "react-redux";
+import { UserReducerInitialState } from "../../../types/reducer-types";
+import { useCreateCouponMutation } from "../../../redux/api/couponAPI";
+import { responseToast } from "../../../utils/features";
 
 const allLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 const allNumbers = "1234567890";
 const allSymbols = "!@#$%^&*()_+";
 
 const Coupon = () => {
+  const { user } = useSelector(
+    (state: { userReducer: UserReducerInitialState }) => state.userReducer
+  );
+
+  const [createCoupon] = useCreateCouponMutation();
+
   const [size, setSize] = useState<number>(8);
+  const [amount, setAmount] = useState<number>(0);
   const [prefix, setPrefix] = useState<string>("");
   const [includeNumbers, setIncludeNumbers] = useState<boolean>(false);
   const [includeCharacters, setIncludeCharacters] = useState<boolean>(false);
@@ -20,7 +31,7 @@ const Coupon = () => {
     setIsCopied(true);
   };
 
-  const submitHandler = (e: FormEvent<HTMLFormElement>) => {
+  const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!includeNumbers && !includeCharacters && !includeSymbols)
@@ -38,8 +49,14 @@ const Coupon = () => {
       const randomNum: number = ~~(Math.random() * entireString.length);
       result += entireString[randomNum];
     }
-
     setCoupon(result);
+    const res = await createCoupon({
+      userId: user?._id!,
+      coupon: result,
+      amount,
+    });
+
+    responseToast(res, null, "");
   };
 
   useEffect(() => {
@@ -94,6 +111,15 @@ const Coupon = () => {
               />
               <span>Symbols</span>
             </fieldset>
+
+            <input
+              className="amount"
+              type="number"
+              placeholder="Discount Amount"
+              value={amount}
+              onChange={(e) => setAmount(Number(e.target.value))}
+            />
+
             <button type="submit">Generate</button>
           </form>
 
