@@ -2,16 +2,30 @@ import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { BiArrowBack } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { CartReducerInitialState } from "../types/reducer-types";
-import { saveShippingInfo } from "../redux/reducer/cartReducer";
+import {
+  CartReducerInitialState,
+  UserReducerInitialState,
+} from "../types/reducer-types";
+import { resetCart, saveShippingInfo } from "../redux/reducer/cartReducer";
+import { useNewOrderMutation } from "../redux/api/orderAPI";
+import { responseToast } from "../utils/features";
 
 const Shipping = () => {
-  const { cartItems } = useSelector(
-    (state: { cartReducer: CartReducerInitialState }) => state.cartReducer
-  );
+  const { cartItems, subtotal, tax, shippingCharges, discount, total, user } =
+    useSelector(
+      (state: {
+        cartReducer: CartReducerInitialState;
+        userReducer: UserReducerInitialState;
+      }) => ({
+        ...state.cartReducer,
+        user: state.userReducer.user,
+      })
+    );
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const [newOrder] = useNewOrderMutation();
 
   const [shippingInfo, setShippingInfo] = useState({
     address: "",
@@ -27,13 +41,27 @@ const Shipping = () => {
     setShippingInfo((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const submitHandler = (e: FormEvent<HTMLFormElement>) => {
+  const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     dispatch(saveShippingInfo(shippingInfo));
+    const order = {
+      orderItems: cartItems,
+      subtotal,
+      tax,
+      shippingCharges,
+      discount,
+      total,
+      shippingInfo,
+      user: user?._id!,
+    };
+    const res = await newOrder(order);
+
+    responseToast(res, navigate, "/");
+    dispatch(resetCart());
   };
 
   useEffect(() => {
-    if (cartItems.length <= 0) return navigate("/cart");
+    if (cartItems.length <= 0) return navigate("/");
   }, [cartItems]);
 
   return (
@@ -92,7 +120,7 @@ const Shipping = () => {
           onChange={changeHandler}
         />
 
-        <button type="submit">Pay Now</button>
+        <button type="submit">Order</button>
       </form>
     </div>
   );

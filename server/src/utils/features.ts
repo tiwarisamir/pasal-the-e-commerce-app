@@ -2,6 +2,8 @@ import mongoose, { Document } from "mongoose";
 import { myCache } from "../app.js";
 import { Product } from "../models/products.js";
 import { InvalidateCacheProps, OrderItemType } from "../types/types.js";
+import { UploadApiResponse, v2 as cloudinary } from "cloudinary";
+import { v4 as uuid } from "uuid";
 
 export const connectDB = () => {
   mongoose
@@ -109,6 +111,35 @@ type funcProps = {
   docArr: myDocument[];
   today: Date;
   property?: "discount" | "total";
+};
+
+interface FileResult {
+  public_id: string;
+  url: string;
+}
+
+export const getBase64 = (file: Express.Multer.File) =>
+  `data:${file.mimetype};base64,${file.buffer.toString("base64")}`;
+
+export const uploadFileToCloudinary = async (
+  file: Express.Multer.File
+): Promise<FileResult> => {
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader.upload(
+      getBase64(file),
+      {
+        resource_type: "auto",
+        public_id: uuid(),
+      },
+      (error, result) => {
+        if (error) return reject(error);
+        resolve({
+          public_id: result!.public_id,
+          url: result!.secure_url,
+        });
+      }
+    );
+  });
 };
 
 export const getChartData = ({

@@ -1,27 +1,31 @@
+import { faker } from "@faker-js/faker";
 import { Request } from "express";
+import { rm } from "fs";
+import { myCache } from "../app.js";
 import { TryCatch } from "../middlewares/error.js";
+import { Product } from "../models/products.js";
 import {
   BaseQuery,
   NewProductRequestBody,
   SearchRequestQuery,
 } from "../types/types.js";
-import { Product } from "../models/products.js";
+import { invalidateCache, uploadFileToCloudinary } from "../utils/features.js";
 import ErrorHandler from "../utils/utility-class.js";
-import { rm } from "fs";
-import { myCache } from "../app.js";
-import { invalidateCache } from "../utils/features.js";
-import { faker } from "@faker-js/faker";
+
+interface MulterRequest<B = any> extends Request<{}, {}, B> {
+  file?: Express.Multer.File;
+}
 
 export const newProduct = TryCatch(
-  async (req: Request<{}, {}, NewProductRequestBody>, res, next) => {
+  async (req: MulterRequest<NewProductRequestBody>, res, next) => {
     const { name, price, stock, category } = req.body;
     const photo = req.file;
 
     if (!photo) return next(new ErrorHandler("Please Add Photo", 400));
+
+    const result = await uploadFileToCloudinary(photo);
+
     if (!name || !price || !stock || !category) {
-      rm(photo.path, () => {
-        console.log("Deleted");
-      });
       return next(new ErrorHandler("Please enter all fields", 400));
     }
 
@@ -30,7 +34,7 @@ export const newProduct = TryCatch(
       price,
       stock,
       category: category.toLowerCase(),
-      photo: photo.path,
+      photo: result.url,
     });
 
     invalidateCache({ product: true, admin: true });
@@ -215,23 +219,3 @@ export const getAllProducts = TryCatch(
     });
   }
 );
-
-export const generateRandomProducts = async (count: number = 10) => {
-  const products = [];
-
-  for (let i = 0; i < count; i++) {
-    const product = {
-      name: faker.commerce.productName(),
-      photo: faker.image.url(),
-      price: Number(faker.commerce.price({ min: 1500, max: 80000, dec: 0 })),
-      stock: Number(faker.commerce.price({ min: 0, max: 100, dec: 0 })),
-      category: faker.commerce.department(),
-      createdAt: new Date(faker.date.past()),
-      updatedAt: new Date(faker.date.recent()),
-      __v: 0,
-    };
-    products.push(product);
-  }
-  await Product.create(products);
-  console.log("Product created successfully");
-};

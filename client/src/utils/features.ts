@@ -23,11 +23,11 @@ export const responseToast = (
   if ("data" in res) {
     toast.success(res.data!.message);
     if (navigate) navigate(url);
-    else {
-      const error = res.error as FetchBaseQueryError;
-      const MessageResponse = error.data as MessageResponse;
-      toast.error(MessageResponse.message);
-    }
+  } else {
+    const error = res.error as FetchBaseQueryError;
+    const MessageResponse = error.data as MessageResponse;
+    console.log(MessageResponse);
+    toast.error(MessageResponse.message);
   }
 };
 

@@ -49,9 +49,13 @@ const Cart = () => {
           cancelToken,
         })
         .then((res) => {
-          dispatch(discountApplied(res.data.discount));
-          setIsValidCouponCode(true);
-          dispatch(calculatePrice());
+          if (res.data.discount >= total) {
+            setIsValidCouponCode(false);
+          } else {
+            dispatch(discountApplied(res.data.discount));
+            setIsValidCouponCode(true);
+            dispatch(calculatePrice());
+          }
         })
         .catch(() => {
           dispatch(discountApplied(0));
@@ -65,7 +69,7 @@ const Cart = () => {
       cancel();
       setIsValidCouponCode(false);
     };
-  }, [couponCode]);
+  }, [couponCode, total]);
 
   useEffect(() => {
     dispatch(calculatePrice());
@@ -103,6 +107,8 @@ const Cart = () => {
         <p>
           <b>Total: रु{total}</b>
         </p>
+
+        <p>Payment: Cash On Delivery</p>
 
         <input
           type="text"
