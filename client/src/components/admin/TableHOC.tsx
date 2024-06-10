@@ -48,7 +48,7 @@ function TableHOC<T extends Object>(
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column, i) => (
+                {headerGroup.headers.map((column) => (
                   <th {...column.getHeaderProps(column.getSortByToggleProps())}>
                     {column.render("Header")}
                     {column.isSorted && (
