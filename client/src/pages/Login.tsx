@@ -2,11 +2,9 @@ import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { FcGoogle } from "react-icons/fc";
+import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
 import { useLoginMutation } from "../redux/api/userAPI";
-import { FetchBaseQueryError } from "@reduxjs/toolkit/query/react";
-import { MessageResponse } from "../types/api-types";
-import { useNavigate } from "react-router-dom";
 import { responseToast } from "../utils/features";
 
 const Login = () => {
