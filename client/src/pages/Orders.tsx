@@ -15,7 +15,6 @@ type DataType = {
   quantity: number;
   discount: number;
   status: ReactElement;
-  action: ReactElement;
 };
 
 const column: Column<DataType>[] = [
@@ -38,10 +37,6 @@ const column: Column<DataType>[] = [
   {
     Header: "Status",
     accessor: "status",
-  },
-  {
-    Header: "Action",
-    accessor: "action",
   },
 ];
 
@@ -80,7 +75,6 @@ const Orders = () => {
               {i.status}
             </span>
           ),
-          action: <Link to={`/admin/product/${i._id}`}>Manage</Link>,
         }))
       );
   }, [data]);
