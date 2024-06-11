@@ -6,12 +6,15 @@ import { auth } from "../firebase";
 import { useLoginMutation } from "../redux/api/userAPI";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query/react";
 import { MessageResponse } from "../types/api-types";
+import { useNavigate } from "react-router-dom";
+import { responseToast } from "../utils/features";
 
 const Login = () => {
   const [gender, setGender] = useState("");
   const [date, setDate] = useState("");
 
   const [login] = useLoginMutation();
+  const navigate = useNavigate();
 
   const loginHandler = async () => {
     try {
@@ -29,13 +32,7 @@ const Login = () => {
         _id: user.uid,
       });
 
-      if ("data" in res) {
-        toast.success(res.data!.message);
-      } else {
-        const error = res.error as FetchBaseQueryError;
-        const message = (error.data as MessageResponse).message;
-        toast.error(message);
-      }
+      responseToast(res, navigate, "/");
     } catch (error) {
       toast.error("Sign In Fail");
     }

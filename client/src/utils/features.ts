@@ -26,7 +26,6 @@ export const responseToast = (
   } else {
     const error = res.error as FetchBaseQueryError;
     const MessageResponse = error.data as MessageResponse;
-    console.log(MessageResponse);
     toast.error(MessageResponse.message);
   }
 };
