@@ -88,7 +88,7 @@ const Orders = () => {
 
   return (
     <div className="container">
-      <h1>My Orders</h1>
+      <h1 style={{ marginLeft: "2rem" }}>My Orders</h1>
       {isLoading ? <Skeleton length={15} /> : Table}
     </div>
   );
