@@ -3,6 +3,7 @@ import { TryCatch } from "../middlewares/error.js";
 import { User } from "../models/user.js";
 import { NewUserRequestBody } from "../types/types.js";
 import ErrorHandler from "../utils/utility-class.js";
+import { isAdult } from "../utils/features.js";
 
 export const newUser = TryCatch(
   async (
@@ -10,7 +11,10 @@ export const newUser = TryCatch(
     res: Response,
     next: NextFunction
   ) => {
-    const { name, email, photo, gender, _id, dob } = req.body;
+    const { name, email, photo, _id, dob } = req.body;
+
+    if (isAdult(new Date(dob)))
+      return next(new ErrorHandler("Minor Not Allowed!", 400));
 
     let user = await User.findById(_id);
 
@@ -20,14 +24,13 @@ export const newUser = TryCatch(
         message: `Welcome, ${user.name}`,
       });
 
-    if (!_id || !name || !email || !photo || !gender || !dob)
+    if (!_id || !name || !email || !photo || !dob)
       return next(new ErrorHandler("Please add all fields", 400));
 
     user = await User.create({
       name,
       email,
       photo,
-      gender,
       _id,
       dob: new Date(dob),
     });

@@ -5,10 +5,9 @@ import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
 import { useLoginMutation } from "../redux/api/userAPI";
-import { responseToast } from "../utils/features";
+import { isAdult, responseToast } from "../utils/features";
 
 const Login = () => {
-  const [gender, setGender] = useState("");
   const [date, setDate] = useState("");
 
   const [login] = useLoginMutation();
@@ -16,21 +15,28 @@ const Login = () => {
 
   const loginHandler = async () => {
     try {
-      const provider = new GoogleAuthProvider();
+      if (date) {
+        if (!isAdult(new Date(date))) {
+          toast.error("Minor are Not allowed to access this site!");
+        } else {
+          const provider = new GoogleAuthProvider();
 
-      const { user } = await signInWithPopup(auth, provider);
+          const { user } = await signInWithPopup(auth, provider);
 
-      const res = await login({
-        name: user.displayName!,
-        email: user.email!,
-        photo: user.photoURL!,
-        gender,
-        role: "admin",
-        dob: date,
-        _id: user.uid,
-      });
+          const res = await login({
+            name: user.displayName!,
+            email: user.email!,
+            photo: user.photoURL!,
+            role: "admin",
+            dob: date,
+            _id: user.uid,
+          });
 
-      responseToast(res, navigate, "/");
+          responseToast(res, navigate, "/");
+        }
+      } else {
+        toast.error("Please Provide Your Age");
+      }
     } catch (error) {
       toast.error("Sign In Fail");
     }
@@ -40,14 +46,6 @@ const Login = () => {
     <div className="login">
       <main>
         <h1 className="heading">Login</h1>
-        <div>
-          <label>Gender</label>
-          <select value={gender} onChange={(e) => setGender(e.target.value)}>
-            <option value="">Select Gender</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-          </select>
-        </div>
 
         <div>
           <label>Date of birth</label>

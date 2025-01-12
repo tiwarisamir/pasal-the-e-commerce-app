@@ -56,3 +56,20 @@ export const getLastMonths = () => {
     last6Months,
   };
 };
+
+export const isAdult = (dob: Date) => {
+  const today = new Date();
+
+  let age = today.getFullYear() - dob.getFullYear();
+
+  if (age < 18) return false;
+  else if (age > 18) return true;
+  else if (
+    today.getMonth() < dob.getMonth() ||
+    (today.getMonth() === dob.getMonth() && today.getDate() < dob.getDate())
+  )
+    return false;
+  else {
+    return true;
+  }
+};

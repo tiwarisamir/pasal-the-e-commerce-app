@@ -1,9 +1,9 @@
+import { v2 as cloudinary } from "cloudinary";
 import mongoose, { Document } from "mongoose";
+import { v4 as uuid } from "uuid";
 import { myCache } from "../app.js";
 import { Product } from "../models/products.js";
 import { InvalidateCacheProps, OrderItemType } from "../types/types.js";
-import { UploadApiResponse, v2 as cloudinary } from "cloudinary";
-import { v4 as uuid } from "uuid";
 
 export const connectDB = () => {
   mongoose
@@ -159,4 +159,21 @@ export const getChartData = ({
     }
   });
   return data;
+};
+
+export const isAdult = (dob: Date) => {
+  const today = new Date();
+
+  let age = today.getFullYear() - dob.getFullYear();
+
+  if (age < 18) return false;
+  else if (age > 18) return true;
+  else if (
+    today.getMonth() < dob.getMonth() ||
+    (today.getMonth() === dob.getMonth() && today.getDate() < dob.getDate())
+  )
+    return false;
+  else {
+    return true;
+  }
 };

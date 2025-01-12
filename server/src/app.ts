@@ -41,10 +41,6 @@ app.use("/api/v1/order", orderRoute);
 app.use("/api/v1/payment", paymentRoute);
 app.use("/api/v1/dashboard", dashboardRoute);
 
-app.get("/", (req, res) => {
-  res.send("Hello there");
-});
-
 app.use("/uploads", express.static("uploads"));
 app.use(errorMiddleware);
 

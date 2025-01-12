@@ -1,4 +1,3 @@
-import { BiMaleFemale } from "react-icons/bi";
 import { BsSearch } from "react-icons/bs";
 import { FaRegBell } from "react-icons/fa";
 import { HiTrendingDown, HiTrendingUp } from "react-icons/hi";
@@ -6,7 +5,7 @@ import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import { Skeleton } from "../../components/Loader";
 import AdminSidebar from "../../components/admin/AdminSidebar";
-import { BarChart, DoughnutChart } from "../../components/admin/Charts";
+import { BarChart } from "../../components/admin/Charts";
 import Table from "../../components/admin/DashboardTable";
 import { useStatsQuery } from "../../redux/api/dashboardAPI";
 import { UserReducerInitialState } from "../../types/reducer-types";
@@ -103,21 +102,6 @@ const Dashboard = () => {
             </section>
 
             <section className="transaction-container">
-              <div className="gender-chart">
-                <h2>Gender Ratio</h2>
-                <DoughnutChart
-                  labels={["Female", "Male"]}
-                  data={[stats.userRatio.female, stats.userRatio.male]}
-                  backgroundColor={[
-                    "hsl(340, 82%, 56%)",
-                    "rgba(53, 162, 235, 0.8)",
-                  ]}
-                  cutout={90}
-                />
-                <p>
-                  <BiMaleFemale />
-                </p>
-              </div>
               <Table data={stats.latestTransaction} />
             </section>
           </>

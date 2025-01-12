@@ -97,7 +97,6 @@ export const getDashboardStats = TryCatch(async (req, res, next) => {
       allOrders,
       lastSixMonthOrders,
       categories,
-      femaleUsersCount,
       latestTransactions,
     ] = await Promise.all([
       thisMonthProductsPromise,
@@ -111,7 +110,6 @@ export const getDashboardStats = TryCatch(async (req, res, next) => {
       Order.find({}).select("total"),
       lastSixMonthOrdersPromise,
       Product.distinct("category"),
-      User.countDocuments({ gender: "female" }),
       latestTransactionsPromise,
     ]);
 
@@ -169,11 +167,6 @@ export const getDashboardStats = TryCatch(async (req, res, next) => {
       productsCount,
     });
 
-    const userRatio = {
-      male: usersCount - femaleUsersCount,
-      female: femaleUsersCount,
-    };
-
     const modifiedLatestTransactions = latestTransactions.map((i) => ({
       _id: i._id,
       discount: i.discount,
@@ -190,7 +183,6 @@ export const getDashboardStats = TryCatch(async (req, res, next) => {
         order: orderMonthCounts,
         revenue: orderMonthRevenue,
       },
-      userRatio,
       latestTransaction: modifiedLatestTransactions,
     };
 

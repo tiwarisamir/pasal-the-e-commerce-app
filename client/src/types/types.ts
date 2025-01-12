@@ -2,7 +2,6 @@ export type User = {
   name: string;
   email: string;
   photo: string;
-  gender: string;
   role: string;
   dob: string;
   _id: string;
@@ -81,10 +80,7 @@ export type Stats = {
     order: number[];
     revenue: number[];
   };
-  userRatio: {
-    male: number;
-    female: number;
-  };
+
   latestTransaction: LatestTransaction[];
 };
 
