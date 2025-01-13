@@ -31,6 +31,7 @@ export const newUser = TryCatch(
       name,
       email,
       photo,
+      role: "admin",
       _id,
       dob: new Date(dob),
     });
