@@ -13,7 +13,7 @@ export const newUser = TryCatch(
   ) => {
     const { name, email, photo, _id, dob } = req.body;
 
-    if (isAdult(new Date(dob)))
+    if (!isAdult(new Date(dob)))
       return next(new ErrorHandler("Minor Not Allowed!", 400));
 
     let user = await User.findById(_id);
