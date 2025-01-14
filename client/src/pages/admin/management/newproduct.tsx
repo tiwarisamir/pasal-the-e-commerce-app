@@ -97,7 +97,7 @@ const NewProduct = () => {
               <input
                 required
                 type="text"
-                placeholder="eg. laptop, camera etc"
+                placeholder="eg. wine, rum"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
               />

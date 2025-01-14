@@ -17,7 +17,7 @@ const Coupon = () => {
   const [createCoupon] = useCreateCouponMutation();
 
   const [size, setSize] = useState<number>(8);
-  const [amount, setAmount] = useState<number>(0);
+  const [amount, setAmount] = useState<number | null>(null);
   const [prefix, setPrefix] = useState<string>("");
   const [includeNumbers, setIncludeNumbers] = useState<boolean>(false);
   const [includeCharacters, setIncludeCharacters] = useState<boolean>(false);
@@ -53,7 +53,7 @@ const Coupon = () => {
     const res = await createCoupon({
       userId: user?._id!,
       coupon: result,
-      amount,
+      amount: amount || 0,
     });
 
     responseToast(res, null, "");
@@ -116,7 +116,7 @@ const Coupon = () => {
               className="amount"
               type="number"
               placeholder="Discount Amount"
-              value={amount}
+              value={amount!}
               onChange={(e) => setAmount(Number(e.target.value))}
             />
 
