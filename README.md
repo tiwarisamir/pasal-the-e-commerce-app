@@ -4,7 +4,7 @@ Pasal is a sophisticated e-commerce application designed for a seamless shopping
 
 ### 🏠 [Visit Website](https://pasal-eta.vercel.app)
 
-[![MasterHead](/client/public/pasal.JPG)](https://pasal-eta.vercel.app)
+[![MasterHead](/client/public/banner image.JPG)](https://pasal-eta.vercel.app)
 
 ## Installation
 
