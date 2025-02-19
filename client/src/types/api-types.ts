@@ -22,6 +22,7 @@ export type CustomError = {
 export type MessageResponse = {
   success: boolean;
   message: string;
+  formData?: any;
 };
 
 export type AllUsersResponse = {
@@ -121,6 +122,12 @@ export type NewOrderRequest = {
   discount: number;
   total: number;
   user: string;
+};
+
+export type TPayment = {
+  user: string;
+  total: number;
+  orderId: string;
 };
 
 export type UpdateOrderRequest = {

@@ -10,6 +10,7 @@ import { auth } from "./firebase";
 import { getUser } from "./redux/api/userAPI";
 import { userExist, userNotExist } from "./redux/reducer/userReducer";
 import { UserReducerInitialState } from "./types/reducer-types";
+import Payment from "./pages/Payment";
 
 const Home = lazy(() => import("./pages/Home"));
 const Search = lazy(() => import("./pages/Search"));
@@ -65,6 +66,7 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/search" element={<Search />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/pay" element={<Payment />} />
 
           <Route
             path="/login"
@@ -82,7 +84,7 @@ const App = () => {
             <Route path="/order/:id" element={<OrderDetails />} />
           </Route>
 
-          {/* Admi Routes */}
+          {/* Admin Routes */}
           <Route
             element={
               <ProtectedRoute

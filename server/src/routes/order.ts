@@ -6,6 +6,7 @@ import {
   deleteOrder,
   myOrder,
   newOrder,
+  pay,
   processOrder,
 } from "../controllers/order.js";
 import { getSingleOrder } from "../controllers/order.js";
@@ -13,6 +14,7 @@ import { getSingleOrder } from "../controllers/order.js";
 const app = express.Router();
 
 app.post("/new", newOrder);
+app.post("/pay", pay);
 
 app.get("/my", myOrder);
 

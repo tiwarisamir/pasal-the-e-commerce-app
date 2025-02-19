@@ -1,16 +1,11 @@
-import { useState } from "react";
-import {
-  FaSearch,
-  FaShoppingBag,
-  FaSignInAlt,
-  FaSignOutAlt,
-  FaUser,
-} from "react-icons/fa";
-import { Link } from "react-router-dom";
-import { User } from "../types/types";
 import { signOut } from "firebase/auth";
-import { auth } from "../firebase";
+import { useState } from "react";
 import toast from "react-hot-toast";
+import { FaSearch, FaShoppingBag, FaSignOutAlt, FaUser } from "react-icons/fa";
+import { TbLogin } from "react-icons/tb";
+import { Link } from "react-router-dom";
+import { auth } from "../firebase";
+import { User } from "../types/types";
 
 interface PropsType {
   user: User | null;
@@ -65,7 +60,7 @@ const Header = ({ user }: PropsType) => {
         </>
       ) : (
         <Link to={"/login"}>
-          <FaSignInAlt />
+          <TbLogin />
         </Link>
       )}
     </nav>

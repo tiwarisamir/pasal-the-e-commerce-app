@@ -131,3 +131,32 @@ export type Line = {
   discount: number[];
   revenue: number[];
 };
+
+export interface IOrder {
+  shippingInfo: ShippingInfo;
+  user: string;
+  subtotal: number;
+  tax: number;
+  shippingCharges: number;
+  discount: number;
+  total: number;
+  status: string;
+  orderItems: {
+    name: string;
+    photo: string;
+    price: number;
+    quantity: number;
+    productId: string;
+    _id: string;
+  }[];
+  _id: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
+export interface OrderResponse {
+  success: boolean;
+  message: string;
+  order: IOrder;
+}

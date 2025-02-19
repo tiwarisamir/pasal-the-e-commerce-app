@@ -1,10 +1,58 @@
 import { Request } from "express";
 import { TryCatch } from "../middlewares/error.js";
-import { NewOrderRequestBody } from "../types/types.js";
+import { NewOrderRequestBody, PaymentRequestBody } from "../types/types.js";
 import { Order } from "../models/order.js";
-import { invalidateCache, reduceStock } from "../utils/features.js";
+import {
+  createSignature,
+  invalidateCache,
+  reduceStock,
+} from "../utils/features.js";
 import ErrorHandler from "../utils/utility-class.js";
 import { myCache } from "../app.js";
+import { Payment } from "../models/payment.js";
+import { v4 as uuidv4 } from "uuid";
+
+export const pay = TryCatch(
+  async (req: Request<{}, {}, PaymentRequestBody>, res, next) => {
+    const { user, orderId, total } = req.body;
+
+    if (!user || !total)
+      return next(new ErrorHandler("Please Enter All Fields", 400));
+
+    const transaction_uuid = uuidv4();
+
+    const payment = await Payment.create({
+      user,
+      total,
+      orderId,
+      transactionId: transaction_uuid,
+    });
+
+    const signature = createSignature(
+      `total_amount=${total},transaction_uuid=${transaction_uuid},product_code=EPAYTEST`
+    );
+
+    const formData = {
+      amount: total,
+      failure_url: `${process.env.FRONTEND_URL}/pay`,
+      product_delivery_charge: "0",
+      product_service_charge: "0",
+      product_code: "EPAYTEST",
+      signature: signature,
+      signed_field_names: "total_amount,transaction_uuid,product_code",
+      success_url: `${process.env.FRONTEND_URL}/pay`,
+      tax_amount: "0",
+      total_amount: total,
+      transaction_uuid: transaction_uuid,
+    };
+
+    return res.status(201).json({
+      success: true,
+      message: "Order Placed Successfully",
+      formData,
+    });
+  }
+);
 
 export const newOrder = TryCatch(
   async (req: Request<{}, {}, NewOrderRequestBody>, res, next) => {
@@ -46,6 +94,7 @@ export const newOrder = TryCatch(
     return res.status(201).json({
       success: true,
       message: "Order Placed Successfully",
+      order,
     });
   }
 );

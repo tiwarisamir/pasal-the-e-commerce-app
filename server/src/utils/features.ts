@@ -4,6 +4,7 @@ import { v4 as uuid } from "uuid";
 import { myCache } from "../app.js";
 import { Product } from "../models/products.js";
 import { InvalidateCacheProps, OrderItemType } from "../types/types.js";
+import crypto from "crypto";
 
 export const connectDB = () => {
   mongoose
@@ -176,4 +177,12 @@ export const isAdult = (dob: Date) => {
   else {
     return true;
   }
+};
+
+export const createSignature = (message: string) => {
+  const hmac = crypto.createHmac("sha256", "8gBm/:&EnhH.1/q");
+  hmac.update(message);
+
+  const hashInBase64 = hmac.digest("base64");
+  return hashInBase64;
 };

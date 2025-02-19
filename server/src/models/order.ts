@@ -50,6 +50,14 @@ const schema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    paymentType: {
+      type: String,
+      enum: ["esewa", "cod"],
+    },
+    paymentId: {
+      type: String,
+      ref: "Payment",
+    },
     status: {
       type: String,
       enum: ["Processing", "Shipped", "Delivered"],

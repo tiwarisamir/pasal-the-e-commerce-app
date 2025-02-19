@@ -108,8 +108,6 @@ const Cart = () => {
           <b>Total: रु{total}</b>
         </p>
 
-        <p>Payment: Cash On Delivery</p>
-
         <input
           type="text"
           placeholder="Coupon Code"

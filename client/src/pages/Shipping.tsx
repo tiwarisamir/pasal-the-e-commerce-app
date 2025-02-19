@@ -1,14 +1,14 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { BiArrowBack } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useNewOrderMutation } from "../redux/api/orderAPI";
+import { resetCart, saveShippingInfo } from "../redux/reducer/cartReducer";
 import {
   CartReducerInitialState,
   UserReducerInitialState,
 } from "../types/reducer-types";
-import { resetCart, saveShippingInfo } from "../redux/reducer/cartReducer";
-import { useNewOrderMutation } from "../redux/api/orderAPI";
-import { responseToast } from "../utils/features";
 
 const Shipping = () => {
   const { cartItems, subtotal, tax, shippingCharges, discount, total, user } =
@@ -43,7 +43,9 @@ const Shipping = () => {
 
   const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     dispatch(saveShippingInfo(shippingInfo));
+
     const order = {
       orderItems: cartItems,
       subtotal,
@@ -54,21 +56,28 @@ const Shipping = () => {
       shippingInfo,
       user: user?._id!,
     };
-    const res = await newOrder(order);
 
-    responseToast(res, navigate, "/");
-    dispatch(resetCart());
+    try {
+      const res = await newOrder(order).unwrap();
+      toast.success(res?.message);
+      localStorage.setItem("order", JSON.stringify(res?.order));
+      navigate("/pay");
+      dispatch(resetCart());
+    } catch (error) {
+      toast.error("Something went wrong. Please try again.");
+    }
   };
 
   useEffect(() => {
     if (cartItems.length <= 0) return navigate("/");
-  }, [cartItems]);
+  }, [cartItems, navigate]);
 
   return (
     <div className="shipping">
       <button className="back-btn" onClick={() => navigate("/cart")}>
         <BiArrowBack />
       </button>
+
       <form onSubmit={submitHandler}>
         <h1>Shipping Address</h1>
 
