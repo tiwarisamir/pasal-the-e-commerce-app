@@ -53,6 +53,7 @@ const schema = new mongoose.Schema(
     paymentType: {
       type: String,
       enum: ["esewa", "cod"],
+      defalult: "cod",
     },
     paymentId: {
       type: String,

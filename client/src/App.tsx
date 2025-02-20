@@ -11,6 +11,7 @@ import { getUser } from "./redux/api/userAPI";
 import { userExist, userNotExist } from "./redux/reducer/userReducer";
 import { UserReducerInitialState } from "./types/reducer-types";
 import Payment from "./pages/Payment";
+import { Helmet } from "react-helmet";
 
 const Home = lazy(() => import("./pages/Home"));
 const Search = lazy(() => import("./pages/Search"));
@@ -61,12 +62,22 @@ const App = () => {
   ) : (
     <BrowserRouter>
       <Header user={user} />
+      <Helmet>
+        <title>Premium Liquor & Spirits | Your Liquor Shop</title>
+        <meta
+          name="description"
+          content="Discover a curated collection of premium liquor, wines, and spirits at Your Liquor Shop. Shop online for fast delivery and exceptional service."
+        />
+        <meta
+          name="keywords"
+          content="liquor, spirits, wine, beer, online liquor store, alcohol delivery, premium liquor, buy alcohol online"
+        />
+      </Helmet>
       <Suspense fallback={<Loader />}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/search" element={<Search />} />
           <Route path="/cart" element={<Cart />} />
-          <Route path="/pay" element={<Payment />} />
 
           <Route
             path="/login"
@@ -81,6 +92,7 @@ const App = () => {
           <Route element={<ProtectedRoute isAuth={user ? true : false} />}>
             <Route path="/shipping" element={<Shipping />} />
             <Route path="/orders" element={<Orders />} />
+            <Route path="/pay-fail" element={<Payment />} />
             <Route path="/order/:id" element={<OrderDetails />} />
           </Route>
 

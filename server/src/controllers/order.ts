@@ -1,6 +1,6 @@
 import { Request } from "express";
 import { TryCatch } from "../middlewares/error.js";
-import { NewOrderRequestBody, PaymentRequestBody } from "../types/types.js";
+import { NewOrderRequestBody } from "../types/types.js";
 import { Order } from "../models/order.js";
 import {
   createSignature,
@@ -13,18 +13,49 @@ import { Payment } from "../models/payment.js";
 import { v4 as uuidv4 } from "uuid";
 
 export const pay = TryCatch(
-  async (req: Request<{}, {}, PaymentRequestBody>, res, next) => {
-    const { user, orderId, total } = req.body;
+  async (req: Request<{}, {}, NewOrderRequestBody>, res, next) => {
+    const {
+      user,
+      total,
+      shippingInfo,
+      orderItems,
+      subtotal,
+      tax,
+      shippingCharges,
+      discount,
+    } = req.body;
 
-    if (!user || !total)
+    if (!shippingInfo || !orderItems || !user || !subtotal || !total)
       return next(new ErrorHandler("Please Enter All Fields", 400));
+
+    const order = await Order.create({
+      shippingInfo,
+      orderItems,
+      user,
+      subtotal,
+      tax,
+      shippingCharges,
+      discount,
+      total,
+      paymentType: "esewa",
+    });
+
+    await reduceStock(orderItems);
+
+    invalidateCache({
+      product: true,
+      order: true,
+      admin: true,
+      userId: user,
+      productId: order.orderItems.map((i) => String(i.productId)),
+    });
 
     const transaction_uuid = uuidv4();
 
-    const payment = await Payment.create({
+    await Payment.create({
       user,
       total,
-      orderId,
+      orderId: order._id,
       transactionId: transaction_uuid,
     });
 
@@ -34,13 +65,13 @@ export const pay = TryCatch(
 
     const formData = {
       amount: total,
-      failure_url: `${process.env.FRONTEND_URL}/pay`,
+      failure_url: `${process.env.FRONTEND_URL}/pay-fail`,
       product_delivery_charge: "0",
       product_service_charge: "0",
       product_code: "EPAYTEST",
       signature: signature,
       signed_field_names: "total_amount,transaction_uuid,product_code",
-      success_url: `${process.env.FRONTEND_URL}/pay`,
+      success_url: `${process.env.FRONTEND_URL}/`,
       tax_amount: "0",
       total_amount: total,
       transaction_uuid: transaction_uuid,

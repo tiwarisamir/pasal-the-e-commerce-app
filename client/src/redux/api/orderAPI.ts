@@ -4,10 +4,8 @@ import {
   MessageResponse,
   NewOrderRequest,
   OrdersDetailsResponse,
-  TPayment,
   UpdateOrderRequest,
 } from "../../types/api-types";
-import { OrderResponse } from "../../types/types";
 
 export const orderApi = createApi({
   reducerPath: "orderApi",
@@ -16,7 +14,7 @@ export const orderApi = createApi({
   }),
   tagTypes: ["orders"],
   endpoints: (builder) => ({
-    newOrder: builder.mutation<OrderResponse, NewOrderRequest>({
+    newOrder: builder.mutation<MessageResponse, NewOrderRequest>({
       query: (order) => ({
         url: "new",
         method: "POST",
@@ -24,7 +22,7 @@ export const orderApi = createApi({
       }),
       invalidatesTags: ["orders"],
     }),
-    pay: builder.mutation<MessageResponse, TPayment>({
+    pay: builder.mutation<MessageResponse, NewOrderRequest>({
       query: (data) => ({
         url: "pay",
         method: "POST",

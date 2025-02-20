@@ -1,9 +1,9 @@
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { BiArrowBack } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { useNewOrderMutation } from "../redux/api/orderAPI";
+import { useNewOrderMutation, usePayMutation } from "../redux/api/orderAPI";
 import { resetCart, saveShippingInfo } from "../redux/reducer/cartReducer";
 import {
   CartReducerInitialState,
@@ -26,6 +26,7 @@ const Shipping = () => {
   const dispatch = useDispatch();
 
   const [newOrder] = useNewOrderMutation();
+  const [pay] = usePayMutation();
 
   const [shippingInfo, setShippingInfo] = useState({
     address: "",
@@ -41,9 +42,7 @@ const Shipping = () => {
     setShippingInfo((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
+  const submitHandler = async () => {
     dispatch(saveShippingInfo(shippingInfo));
 
     const order = {
@@ -60,8 +59,48 @@ const Shipping = () => {
     try {
       const res = await newOrder(order).unwrap();
       toast.success(res?.message);
-      localStorage.setItem("order", JSON.stringify(res?.order));
-      navigate("/pay");
+      navigate("/");
+      dispatch(resetCart());
+    } catch (error) {
+      toast.error("Something went wrong. Please try again.");
+    }
+  };
+
+  const handlePay = async () => {
+    dispatch(saveShippingInfo(shippingInfo));
+
+    const order = {
+      orderItems: cartItems,
+      subtotal,
+      tax,
+      shippingCharges,
+      discount,
+      total,
+      shippingInfo,
+      user: user?._id!,
+    };
+
+    try {
+      const res = await pay(order).unwrap();
+      toast.success(res?.message);
+      if (res && res.formData) {
+        var path = "https://rc-epay.esewa.com.np/api/epay/main/v2/form";
+
+        var form = document.createElement("form");
+        form.setAttribute("method", "POST");
+        form.setAttribute("action", path);
+
+        for (var key in res.formData) {
+          var hiddenField = document.createElement("input");
+          hiddenField.setAttribute("type", "hidden");
+          hiddenField.setAttribute("name", key);
+          hiddenField.setAttribute("value", res.formData[key]);
+          form.appendChild(hiddenField);
+        }
+
+        document.body.appendChild(form);
+        form.submit();
+      }
       dispatch(resetCart());
     } catch (error) {
       toast.error("Something went wrong. Please try again.");
@@ -78,7 +117,7 @@ const Shipping = () => {
         <BiArrowBack />
       </button>
 
-      <form onSubmit={submitHandler}>
+      <form>
         <h1>Shipping Address</h1>
 
         <input
@@ -129,7 +168,12 @@ const Shipping = () => {
           onChange={changeHandler}
         />
 
-        <button type="submit">Order</button>
+        <button type="button" onClick={handlePay}>
+          Order & Pay
+        </button>
+        <button type="button" onClick={submitHandler}>
+          Cash On Delivery
+        </button>
       </form>
     </div>
   );

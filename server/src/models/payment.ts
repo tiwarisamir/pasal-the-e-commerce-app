@@ -20,11 +20,6 @@ const schema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    status: {
-      type: String,
-      enum: ["Pending", "Paid", "Failed"],
-      default: "Pending",
-    },
   },
   {
     timestamps: true,

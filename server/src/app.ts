@@ -12,6 +12,7 @@ import paymentRoute from "./routes/payment.js";
 import productRoute from "./routes/products.js";
 import dashboardRoute from "./routes/stats.js";
 import userRoute from "./routes/user.js";
+import { Product } from "./models/products.js";
 
 config({
   path: "./.env",
@@ -47,3 +48,46 @@ app.use(errorMiddleware);
 app.listen(port, () => {
   console.log(`Server is working on port ${port}`);
 });
+
+const storeIntegerPrice = async (productId: any) => {
+  try {
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      throw new Error("Product not found");
+    }
+
+    if (typeof product.price !== "number") {
+      throw new Error("Product price is not a number");
+    }
+    let integerPrice = product.price;
+    if (product.price > 1000) {
+      integerPrice = Math.floor(product.price / 10); // Get the integer part
+    }
+
+    product.price = integerPrice; // Update the product's price
+
+    await product.save(); // Save the updated product
+
+    console.log(`Product price updated to integer: ${integerPrice}`);
+    return integerPrice; // Optionally return the updated price
+  } catch (error) {
+    console.error("Error storing integer price:", error);
+    throw error; // Re-throw the error for handling elsewhere
+  }
+};
+
+const updateAllProductPrices = async () => {
+  try {
+    const allProducts = await Product.find({});
+    for (const product of allProducts) {
+      await storeIntegerPrice(product._id);
+    }
+    console.log("All product prices updated to integers.");
+  } catch (err) {
+    console.error("error updating all products:", err);
+    throw err;
+  }
+};
+
+// updateAllProductPrices();

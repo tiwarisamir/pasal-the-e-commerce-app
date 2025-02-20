@@ -76,8 +76,4 @@ export interface NewOrderRequestBody {
   orderItems: OrderItemType[];
 }
 
-export interface PaymentRequestBody {
-  user: string;
-  orderId: string;
-  total: number;
-}
+
