@@ -3,9 +3,12 @@ import { NextFunction, Request, Response } from "express";
 export interface NewUserRequestBody {
   name: string;
   email: string;
-  photo: string;
-  _id: string;
-  dob: Date;
+  password: string;
+}
+
+export interface ILoginReqBody {
+  email: string;
+  password: string;
 }
 
 export interface NewProductRequestBody {
@@ -75,5 +78,3 @@ export interface NewOrderRequestBody {
   total: number;
   orderItems: OrderItemType[];
 }
-
-

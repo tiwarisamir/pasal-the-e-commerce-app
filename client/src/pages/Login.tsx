@@ -1,45 +1,27 @@
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { FcGoogle } from "react-icons/fc";
-import { useNavigate } from "react-router-dom";
-import { auth } from "../firebase";
+import { Link, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../redux/api/userAPI";
-import { isAdult, responseToast } from "../utils/features";
+import { responseToast } from "../utils/features";
 
 const Login = () => {
-  const [date, setDate] = useState("");
-
+  const [form, setForm] = useState({ email: "", password: "" });
   const [login] = useLoginMutation();
   const navigate = useNavigate();
 
   const loginHandler = async () => {
-    try {
-      if (date) {
-        if (!isAdult(new Date(date))) {
-          toast.error("Minor are Not allowed to access this site!");
-        } else {
-          const provider = new GoogleAuthProvider();
+    const { email, password } = form;
 
-          const { user } = await signInWithPopup(auth, provider);
+    if (!email || !password) return toast.error("All fields are required");
 
-          const res = await login({
-            name: user.displayName!,
-            email: user.email!,
-            photo: user.photoURL!,
-            role: "admin",
-            dob: date,
-            _id: user.uid,
-          });
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) return toast.error("Invalid email format");
 
-          responseToast(res, navigate, "/");
-        }
-      } else {
-        toast.error("Please Provide Your Age");
-      }
-    } catch (error) {
-      toast.error("Sign In Fail");
-    }
+    if (password.length < 6)
+      return toast.error("Password must be at least 6 characters");
+
+    const res = await login(form);
+    responseToast(res, navigate, "/");
   };
 
   return (
@@ -48,20 +30,28 @@ const Login = () => {
         <h1 className="heading">Login</h1>
 
         <div>
-          <label>Date of birth</label>
+          <label>Email</label>
           <input
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
+            type="email"
+            value={form.email}
+            onChange={(e) => setForm({ ...form, email: e.target.value })}
           />
         </div>
 
         <div>
-          <p>Already Signed In Once </p>
-          <button onClick={loginHandler}>
-            <FcGoogle /> <span>Sign in with Google</span>
-          </button>
+          <label>Password</label>
+          <input
+            type="password"
+            value={form.password}
+            onChange={(e) => setForm({ ...form, password: e.target.value })}
+          />
         </div>
+
+        <button onClick={loginHandler}>Login</button>
+
+        <p className="signup-link">
+          Don't have an account? <Link to="/signup">Sign up</Link>
+        </p>
       </main>
     </div>
   );

@@ -3,13 +3,16 @@ import {
   deleteUser,
   getAllUsers,
   getUser,
-  newUser,
+  login,
+  register,
 } from "../controllers/user.js";
 import { adminOnly } from "../middlewares/auth.js";
+import { singleUpload } from "../middlewares/multer.js";
 
 const app = express.Router();
 
-app.post("/new", newUser);
+app.post("/register", singleUpload, register);
+app.post("/login", login);
 app.get("/all", adminOnly, getAllUsers);
 
 app.route("/:id").get(getUser).delete(adminOnly, deleteUser);

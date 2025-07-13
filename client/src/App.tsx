@@ -13,6 +13,7 @@ import { UserReducerInitialState } from "./types/reducer-types";
 import Payment from "./pages/Payment";
 import { Helmet } from "react-helmet";
 
+const Signup = lazy(() => import("./pages/Signup"));
 const Home = lazy(() => import("./pages/Home"));
 const Search = lazy(() => import("./pages/Search"));
 const Cart = lazy(() => import("./pages/Cart"));
@@ -84,6 +85,14 @@ const App = () => {
             element={
               <ProtectedRoute isAuth={user ? false : true}>
                 <Login />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/signup"
+            element={
+              <ProtectedRoute isAuth={user ? false : true}>
+                <Signup />
               </ProtectedRoute>
             }
           />

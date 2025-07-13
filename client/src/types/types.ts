@@ -7,6 +7,11 @@ export type User = {
   _id: string;
 };
 
+export type ILogin = {
+  email: string;
+  password: string;
+};
+
 export type Product = {
   name: string;
   price: number;

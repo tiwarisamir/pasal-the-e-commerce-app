@@ -1,4 +1,5 @@
 import { ReactElement } from "react";
+import toast from "react-hot-toast";
 import { Navigate, Outlet } from "react-router-dom";
 
 interface Props {
@@ -14,11 +15,17 @@ const ProtectedRoute = ({
   children,
   adminOnly,
   admin,
-  redirect = "/",
+  redirect = "/login",
 }: Props) => {
-  if (!isAuth) return <Navigate to={redirect} />;
+  if (!isAuth) {
+    toast.error("Please login first!");
+    return <Navigate to={redirect} />;
+  }
 
-  if (adminOnly && !admin) return <Navigate to={redirect} />;
+  if (adminOnly && !admin) {
+    toast.error("Please login first!");
+    return <Navigate to={redirect} />;
+  }
 
   return children ? children : <Outlet />;
 };

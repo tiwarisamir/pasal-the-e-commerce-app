@@ -5,7 +5,7 @@ import {
   MessageResponse,
   UserResponse,
 } from "../../types/api-types";
-import { User } from "../../types/types";
+import { ILogin, User } from "../../types/types";
 import axios from "axios";
 
 export const userAPI = createApi({
@@ -15,9 +15,17 @@ export const userAPI = createApi({
   }),
   tagTypes: ["users"],
   endpoints: (builder) => ({
-    login: builder.mutation<MessageResponse, User>({
+    login: builder.mutation<MessageResponse, ILogin>({
       query: (user) => ({
-        url: "new",
+        url: "login",
+        method: "POST",
+        body: user,
+      }),
+      invalidatesTags: ["users"],
+    }),
+    register: builder.mutation<MessageResponse, FormData>({
+      query: (user) => ({
+        url: "register",
         method: "POST",
         body: user,
       }),
@@ -50,5 +58,9 @@ export const getUser = async (id: string) => {
   }
 };
 
-export const { useLoginMutation, useAllUsersQuery, useDeleteUserMutation } =
-  userAPI;
+export const {
+  useLoginMutation,
+  useAllUsersQuery,
+  useDeleteUserMutation,
+  useRegisterMutation,
+} = userAPI;
