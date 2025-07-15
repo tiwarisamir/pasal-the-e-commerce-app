@@ -1,47 +1,54 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import axios from "axios";
 import {
   AllUsersResponse,
   DeleteUserRequest,
+  ILoginResponse,
   MessageResponse,
   UserResponse,
 } from "../../types/api-types";
-import { ILogin, User } from "../../types/types";
-import axios from "axios";
+import { ILogin } from "../../types/types";
+import { baseQueryWithAuth } from "../../utils/setAuthHeader";
 
 export const userAPI = createApi({
   reducerPath: "userApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: `${import.meta.env.VITE_SERVER}/api/v1/user/`,
-  }),
+  baseQuery: baseQueryWithAuth,
   tagTypes: ["users"],
   endpoints: (builder) => ({
-    login: builder.mutation<MessageResponse, ILogin>({
+    login: builder.mutation<ILoginResponse, ILogin>({
       query: (user) => ({
-        url: "login",
+        url: "/api/v1/user/login",
         method: "POST",
         body: user,
       }),
       invalidatesTags: ["users"],
     }),
-    register: builder.mutation<MessageResponse, FormData>({
+    register: builder.mutation<ILoginResponse, FormData>({
       query: (user) => ({
-        url: "register",
+        url: "/api/v1/user/register",
         method: "POST",
         body: user,
+      }),
+      invalidatesTags: ["users"],
+    }),
+    logout: builder.mutation<MessageResponse, void>({
+      query: () => ({
+        url: "/api/v1/user/logout",
+        method: "POST",
       }),
       invalidatesTags: ["users"],
     }),
 
     deleteUser: builder.mutation<MessageResponse, DeleteUserRequest>({
       query: ({ userId, adminUserId }) => ({
-        url: `${userId}?id=${adminUserId}`,
+        url: `/api/v1/user/${userId}?id=${adminUserId}`,
         method: "DELETE",
       }),
       invalidatesTags: ["users"],
     }),
 
     allUsers: builder.query<AllUsersResponse, string>({
-      query: (id) => `all?id=${id}`,
+      query: (id) => `/api/v1/user/all?id=${id}`,
       providesTags: ["users"],
     }),
   }),
@@ -63,4 +70,5 @@ export const {
   useAllUsersQuery,
   useDeleteUserMutation,
   useRegisterMutation,
+  useLogoutMutation,
 } = userAPI;

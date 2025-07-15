@@ -2,7 +2,11 @@ import { useState, useRef } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { useRegisterMutation } from "../redux/api/userAPI";
-import { responseToast } from "../utils/features";
+import {
+  responseToast,
+  setAccessToken,
+  setUserDetails,
+} from "../utils/features";
 
 const Signup = () => {
   const [step, setStep] = useState(1);
@@ -53,16 +57,27 @@ const Signup = () => {
   };
 
   const submitHandler = async () => {
-    if (!image) return toast.error("Please capture an image");
+    try {
+      if (!image) return toast.error("Please capture an image");
 
-    const formData = new FormData();
-    formData.append("name", form.name);
-    formData.append("email", form.email);
-    formData.append("password", form.password);
-    formData.append("photo", image);
-
-    const res = await register(formData);
-    responseToast(res, navigate, "/");
+      const formData = new FormData();
+      formData.append("name", form.name);
+      formData.append("email", form.email);
+      formData.append("password", form.password);
+      formData.append("photo", image);
+      const res = await register(formData);
+      if (res?.data?.success) {
+        const { token, user } = res?.data?.data!;
+        setAccessToken(token);
+        setUserDetails(user);
+        responseToast(res, navigate, "/");
+        toast.success(res?.data?.message || "Account registered successfully!");
+      } else {
+        toast.error(res?.data?.message || "Something went wrong");
+      }
+    } catch (error) {
+      toast.error("Something went wrong");
+    }
   };
 
   const validateStep1 = (data: typeof form) => {

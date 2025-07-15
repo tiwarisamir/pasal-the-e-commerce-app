@@ -12,7 +12,7 @@ import {
 import { CustomError } from "../../types/api-types";
 import toast from "react-hot-toast";
 import { Skeleton } from "../../components/Loader";
-import { responseToast } from "../../utils/features";
+import { getUserDetail, responseToast } from "../../utils/features";
 
 interface DataType {
   avatar: ReactElement;
@@ -47,9 +47,7 @@ const columns: Column<DataType>[] = [
 ];
 
 const Customers = () => {
-  const { user } = useSelector(
-    (state: { userReducer: UserReducerInitialState }) => state.userReducer
-  );
+  const user = getUserDetail()!;
 
   const { isLoading, data, isError, error } = useAllUsersQuery(user?._id!);
 

@@ -9,14 +9,13 @@ import { BarChart } from "../../components/admin/Charts";
 import Table from "../../components/admin/DashboardTable";
 import { useStatsQuery } from "../../redux/api/dashboardAPI";
 import { UserReducerInitialState } from "../../types/reducer-types";
+import { getUserDetail } from "../../utils/features";
 
 const userImg =
   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJxA5cTf-5dh5Eusm0puHbvAhOrCRPtckzjA&usqp";
 
 const Dashboard = () => {
-  const { user } = useSelector(
-    (state: { userReducer: UserReducerInitialState }) => state.userReducer
-  );
+  const user = getUserDetail()!;
 
   const { isLoading, data, isError } = useStatsQuery(user?._id!);
 
@@ -36,7 +35,7 @@ const Dashboard = () => {
               <BsSearch />
               <input type="text" placeholder="Search for data, users, docs" />
               <FaRegBell />
-              <img src={user?.photo || userImg} alt="User" />
+              {/* <img src={user?.photo || userImg} alt="User" /> */}
             </div>
 
             <section className="widget-container">

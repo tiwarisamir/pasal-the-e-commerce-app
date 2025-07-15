@@ -1,10 +1,11 @@
 import { v2 as cloudinary } from "cloudinary";
+import crypto from "crypto";
 import mongoose, { Document } from "mongoose";
 import { v4 as uuid } from "uuid";
 import { myCache } from "../app.js";
 import { Product } from "../models/products.js";
 import { InvalidateCacheProps, OrderItemType } from "../types/types.js";
-import crypto from "crypto";
+import jwt from "jsonwebtoken";
 
 export const connectDB = () => {
   mongoose
@@ -162,27 +163,17 @@ export const getChartData = ({
   return data;
 };
 
-export const isAdult = (dob: Date) => {
-  const today = new Date();
-
-  let age = today.getFullYear() - dob.getFullYear();
-
-  if (age < 18) return false;
-  else if (age > 18) return true;
-  else if (
-    today.getMonth() < dob.getMonth() ||
-    (today.getMonth() === dob.getMonth() && today.getDate() < dob.getDate())
-  )
-    return false;
-  else {
-    return true;
-  }
-};
-
 export const createSignature = (message: string) => {
   const hmac = crypto.createHmac("sha256", "8gBm/:&EnhH.1/q");
   hmac.update(message);
 
   const hashInBase64 = hmac.digest("base64");
   return hashInBase64;
+};
+
+export const createToken = (id: string) => {
+  const token = jwt.sign({ _id: id }, process.env.JWT_SCRET as string, {
+    expiresIn: "1d",
+  });
+  return token;
 };

@@ -1,5 +1,4 @@
 import { FaTrash } from "react-icons/fa";
-import { useSelector } from "react-redux";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { Skeleton } from "../../../components/Loader";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
@@ -9,9 +8,8 @@ import {
   useUpdateOrderMutation,
 } from "../../../redux/api/orderAPI";
 import { SERVER } from "../../../redux/store";
-import { UserReducerInitialState } from "../../../types/reducer-types";
 import { Order, OrderItem } from "../../../types/types";
-import { responseToast } from "../../../utils/features";
+import { getUserDetail, responseToast } from "../../../utils/features";
 
 const defaultData: Order = {
   shippingInfo: {
@@ -34,9 +32,7 @@ const defaultData: Order = {
 };
 
 const TransactionManagement = () => {
-  const { user } = useSelector(
-    (state: { userReducer: UserReducerInitialState }) => state.userReducer
-  );
+  const user = getUserDetail()!;
 
   const params = useParams();
   const navigate = useNavigate();

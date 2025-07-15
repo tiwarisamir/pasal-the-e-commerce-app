@@ -5,22 +5,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useNewOrderMutation, usePayMutation } from "../redux/api/orderAPI";
 import { resetCart, saveShippingInfo } from "../redux/reducer/cartReducer";
-import {
-  CartReducerInitialState,
-  UserReducerInitialState,
-} from "../types/reducer-types";
+import { CartReducerInitialState } from "../types/reducer-types";
+import { getUserDetail } from "../utils/features";
 
 const Shipping = () => {
-  const { cartItems, subtotal, tax, shippingCharges, discount, total, user } =
-    useSelector(
-      (state: {
-        cartReducer: CartReducerInitialState;
-        userReducer: UserReducerInitialState;
-      }) => ({
-        ...state.cartReducer,
-        user: state.userReducer.user,
-      })
-    );
+  const user = getUserDetail()!;
+  const { cartItems, subtotal, tax, shippingCharges, discount, total } =
+    useSelector((state: { cartReducer: CartReducerInitialState }) => ({
+      ...state.cartReducer,
+    }));
 
   const navigate = useNavigate();
   const dispatch = useDispatch();

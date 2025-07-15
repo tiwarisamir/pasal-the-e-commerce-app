@@ -1,4 +1,4 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
 import {
   AllProductsResponse,
   CategoriesResponse,
@@ -10,33 +10,32 @@ import {
   SearchProductsResponse,
   UpdateProductRequest,
 } from "../../types/api-types";
+import { baseQueryWithAuth } from "../../utils/setAuthHeader";
 
 export const productAPI = createApi({
   reducerPath: "productApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: `${import.meta.env.VITE_SERVER}/api/v1/product/`,
-  }),
+  baseQuery: baseQueryWithAuth,
   tagTypes: ["product"],
   endpoints: (builder) => ({
     latestProduct: builder.query<AllProductsResponse, string>({
-      query: () => "latest",
+      query: () => "/api/v1/product/latest",
       providesTags: ["product"],
     }),
 
     allProduct: builder.query<AllProductsResponse, string>({
-      query: (id) => `admin-products?id=${id}`,
+      query: (id) => `/api/v1/product/admin-products?id=${id}`,
       providesTags: ["product"],
     }),
 
     categories: builder.query<CategoriesResponse, string>({
-      query: () => `categories`,
+      query: () => `/api/v1/product/categories`,
       providesTags: ["product"],
     }),
 
     searchProduct: builder.query<SearchProductsResponse, SearchProductsRequest>(
       {
         query: ({ price, search, sort, category, page }) => {
-          let base = `all?page=${page}`;
+          let base = `/api/v1/product/all?page=${page}`;
 
           if (search) base += `&search=${search}`;
           if (price) base += `&price=${price}`;

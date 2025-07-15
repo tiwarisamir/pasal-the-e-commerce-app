@@ -2,7 +2,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../redux/api/userAPI";
-import { responseToast } from "../utils/features";
+import { responseToast, setAccessToken, setUserDetails } from "../utils/features";
 
 const Login = () => {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -21,6 +21,11 @@ const Login = () => {
       return toast.error("Password must be at least 6 characters");
 
     const res = await login(form);
+    if ("data" in res) {
+      const { token, user } = res?.data?.data!;
+      setAccessToken(token);
+      setUserDetails(user);
+    }
     responseToast(res, navigate, "/");
   };
 

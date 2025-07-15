@@ -7,6 +7,14 @@ export type User = {
   _id: string;
 };
 
+export type IUser = {
+  _id: string;
+  name: string;
+  email: string;
+  role: string;
+  isAdult: boolean;
+};
+
 export type ILogin = {
   email: string;
   password: string;

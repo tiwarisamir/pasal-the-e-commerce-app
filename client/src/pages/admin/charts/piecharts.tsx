@@ -1,15 +1,12 @@
-import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import { Skeleton } from "../../../components/Loader";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
 import { DoughnutChart, PieChart } from "../../../components/admin/Charts";
 import { usePieQuery } from "../../../redux/api/dashboardAPI";
-import { UserReducerInitialState } from "../../../types/reducer-types";
+import { getUserDetail } from "../../../utils/features";
 
 const PieCharts = () => {
-  const { user } = useSelector(
-    (state: { userReducer: UserReducerInitialState }) => state.userReducer
-  );
+  const user = getUserDetail()!;
 
   const { isLoading, data, isError } = usePieQuery(user?._id!);
 

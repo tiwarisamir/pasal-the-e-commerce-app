@@ -9,6 +9,7 @@ import TableHOC from "../../components/admin/TableHOC";
 import { useAllOrderQuery } from "../../redux/api/orderAPI";
 import { CustomError } from "../../types/api-types";
 import { UserReducerInitialState } from "../../types/reducer-types";
+import { getUserDetail } from "../../utils/features";
 
 interface DataType {
   user: string;
@@ -47,9 +48,7 @@ const columns: Column<DataType>[] = [
 ];
 
 const Transaction = () => {
-  const { user } = useSelector(
-    (state: { userReducer: UserReducerInitialState }) => state.userReducer
-  );
+  const user = getUserDetail()!;
 
   const { isLoading, data, isError, error } = useAllOrderQuery(user?._id!);
 

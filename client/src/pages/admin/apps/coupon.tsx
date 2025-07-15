@@ -1,18 +1,14 @@
 import { FormEvent, useEffect, useState } from "react";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
-import { useSelector } from "react-redux";
-import { UserReducerInitialState } from "../../../types/reducer-types";
 import { useCreateCouponMutation } from "../../../redux/api/couponAPI";
-import { responseToast } from "../../../utils/features";
+import { getUserDetail, responseToast } from "../../../utils/features";
 
 const allLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 const allNumbers = "1234567890";
 const allSymbols = "!@#$%^&*()_+";
 
 const Coupon = () => {
-  const { user } = useSelector(
-    (state: { userReducer: UserReducerInitialState }) => state.userReducer
-  );
+  const user = getUserDetail()!;
 
   const [createCoupon] = useCreateCouponMutation();
 

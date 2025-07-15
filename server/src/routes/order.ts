@@ -1,6 +1,6 @@
 import express from "express";
 
-import { adminOnly } from "../middlewares/auth.js";
+import { adminOnly, isAuth } from "../middlewares/auth.js";
 import {
   allOrder,
   deleteOrder,
@@ -13,16 +13,16 @@ import { getSingleOrder } from "../controllers/order.js";
 
 const app = express.Router();
 
-app.post("/new", newOrder);
-app.post("/pay", pay);
+app.post("/new", isAuth, newOrder);
+app.post("/pay", isAuth, pay);
 
-app.get("/my", myOrder);
+app.get("/my", isAuth, myOrder);
 
 app.get("/all", adminOnly, allOrder);
 
 app
   .route("/:id")
-  .get(getSingleOrder)
+  .get(isAuth, getSingleOrder)
   .put(adminOnly, processOrder)
   .delete(adminOnly, deleteOrder);
 

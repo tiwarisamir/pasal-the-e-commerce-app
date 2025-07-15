@@ -168,7 +168,7 @@ export const allOrder = TryCatch(async (req, res, next) => {
 });
 
 export const getSingleOrder = TryCatch(async (req, res, next) => {
-  const { id } = req.params;
+  const { _id: id } = req.user!;
 
   const key = `order-${id}`;
 

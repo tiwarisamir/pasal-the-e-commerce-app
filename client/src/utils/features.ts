@@ -4,6 +4,8 @@ import { SerializedError } from "@reduxjs/toolkit";
 import { NavigateFunction } from "react-router-dom";
 import toast from "react-hot-toast";
 import moment from "moment";
+import Cookies from "js-cookie";
+import { IUser } from "../types/types";
 
 type ResType =
   | {
@@ -57,19 +59,26 @@ export const getLastMonths = () => {
   };
 };
 
-export const isAdult = (dob: Date) => {
-  const today = new Date();
+export const setAccessToken = (token: string) => {
+  Cookies.set("access-token", token, { expires: 1 });
+};
 
-  let age = today.getFullYear() - dob.getFullYear();
+export const setUserDetails = (tokenInfo: IUser) => {
+  Cookies.set("User", JSON.stringify(tokenInfo), { expires: 1 });
+};
 
-  if (age < 18) return false;
-  else if (age > 18) return true;
-  else if (
-    today.getMonth() < dob.getMonth() ||
-    (today.getMonth() === dob.getMonth() && today.getDate() < dob.getDate())
-  )
-    return false;
-  else {
-    return true;
+export const getAccessToken = () => {
+  const accessToken = Cookies.get("access-token");
+
+  if (accessToken) return accessToken;
+  else return null;
+};
+
+export const getUserDetail = () => {
+  const User = Cookies.get("User");
+
+  if (User) {
+    return JSON.parse(User) as IUser;
   }
+  return null;
 };

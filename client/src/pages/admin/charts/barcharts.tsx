@@ -1,19 +1,15 @@
-import { useSelector } from "react-redux";
+import toast from "react-hot-toast";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
 import { BarChart } from "../../../components/admin/Charts";
-import { UserReducerInitialState } from "../../../types/reducer-types";
+import { Skeleton } from "../../../components/Loader";
 import { useBarQuery } from "../../../redux/api/dashboardAPI";
 import { CustomError } from "../../../types/api-types";
-import toast from "react-hot-toast";
-import { Skeleton } from "../../../components/Loader";
-import { getLastMonths } from "../../../utils/features";
+import { getLastMonths, getUserDetail } from "../../../utils/features";
 
 const { last12Months, last6Months } = getLastMonths();
 
 const Barcharts = () => {
-  const { user } = useSelector(
-    (state: { userReducer: UserReducerInitialState }) => state.userReducer
-  );
+  const user = getUserDetail()!;
 
   const { isLoading, data, isError, error } = useBarQuery(user?._id!);
 

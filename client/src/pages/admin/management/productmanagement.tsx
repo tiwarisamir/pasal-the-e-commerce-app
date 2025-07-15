@@ -10,12 +10,10 @@ import {
   useUpdateProductMutation,
 } from "../../../redux/api/productAPI";
 import { UserReducerInitialState } from "../../../types/reducer-types";
-import { responseToast } from "../../../utils/features";
+import { getUserDetail, responseToast } from "../../../utils/features";
 
 const Productmanagement = () => {
-  const { user } = useSelector(
-    (state: { userReducer: UserReducerInitialState }) => state.userReducer
-  );
+  const user = getUserDetail()!;
 
   const params = useParams();
   const navigate = useNavigate();

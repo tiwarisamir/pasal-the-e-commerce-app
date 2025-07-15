@@ -1,4 +1,4 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
 import {
   AllordersResponse,
   MessageResponse,
@@ -6,17 +6,16 @@ import {
   OrdersDetailsResponse,
   UpdateOrderRequest,
 } from "../../types/api-types";
+import { baseQueryWithAuth } from "../../utils/setAuthHeader";
 
 export const orderApi = createApi({
   reducerPath: "orderApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: `${import.meta.env.VITE_SERVER}/api/v1/order/`,
-  }),
+  baseQuery: baseQueryWithAuth,
   tagTypes: ["orders"],
   endpoints: (builder) => ({
     newOrder: builder.mutation<MessageResponse, NewOrderRequest>({
       query: (order) => ({
-        url: "new",
+        url: "/api/v1/order/new",
         method: "POST",
         body: order,
       }),
@@ -24,7 +23,7 @@ export const orderApi = createApi({
     }),
     pay: builder.mutation<MessageResponse, NewOrderRequest>({
       query: (data) => ({
-        url: "pay",
+        url: "/api/v1/order/pay",
         method: "POST",
         body: data,
       }),
@@ -32,7 +31,7 @@ export const orderApi = createApi({
 
     updateOrder: builder.mutation<MessageResponse, UpdateOrderRequest>({
       query: ({ userId, orderId }) => ({
-        url: `${orderId}?id=${userId}`,
+        url: `/api/v1/order/${orderId}?id=${userId}`,
         method: "PUT",
       }),
       invalidatesTags: ["orders"],

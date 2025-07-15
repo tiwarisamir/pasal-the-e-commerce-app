@@ -1,4 +1,9 @@
 import { NextFunction, Request, Response } from "express";
+import { Types } from "mongoose";
+
+export interface IJwtPayload {
+  _id: string | Types.ObjectId;
+}
 
 export interface NewUserRequestBody {
   name: string;

@@ -1,22 +1,26 @@
-import { signOut } from "firebase/auth";
 import { useState } from "react";
-import toast from "react-hot-toast";
 import { FaSearch, FaShoppingBag, FaSignOutAlt, FaUser } from "react-icons/fa";
 import { TbLogin } from "react-icons/tb";
-import { Link } from "react-router-dom";
-import { auth } from "../firebase";
-import { User } from "../types/types";
+import { Link, useNavigate } from "react-router-dom";
+import { getUserDetail } from "../utils/features";
+import { useLogoutMutation } from "../redux/api/userAPI";
+import toast from "react-hot-toast";
+import Cookies from "js-cookie";
 
-interface PropsType {
-  user: User | null;
-}
-
-const Header = ({ user }: PropsType) => {
+const Header = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
+  const [logout, { isLoading }] = useLogoutMutation();
+
+  const navigate = useNavigate();
+
+  const user = getUserDetail();
   const logoutHandler = async () => {
     try {
-      await signOut(auth);
+      await logout().unwrap();
+      Cookies.remove("access-token");
+      Cookies.remove("User");
+      navigate("/");
       toast.success("Sign Out Successfully");
       setIsOpen(false);
     } catch (error) {
@@ -36,7 +40,7 @@ const Header = ({ user }: PropsType) => {
         <FaShoppingBag />
       </Link>
 
-      {user?._id ? (
+      {user ? (
         <>
           <button onClick={() => setIsOpen((prev) => !prev)}>
             <FaUser />
@@ -52,7 +56,7 @@ const Header = ({ user }: PropsType) => {
               <Link to="/orders" onClick={() => setIsOpen(false)}>
                 Orders
               </Link>
-              <button onClick={logoutHandler}>
+              <button disabled={isLoading} onClick={logoutHandler}>
                 <FaSignOutAlt />
               </button>
             </div>

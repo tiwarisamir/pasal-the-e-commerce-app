@@ -2,6 +2,7 @@ import {
   Bar,
   CartItem,
   Coupon,
+  IUser,
   Line,
   Order,
   Pie,
@@ -24,6 +25,13 @@ export type MessageResponse = {
   message: string;
   formData?: any;
 };
+
+export interface ILoginResponse extends MessageResponse {
+  data: {
+    token: string;
+    user: IUser;
+  };
+}
 
 export type AllUsersResponse = {
   success: boolean;

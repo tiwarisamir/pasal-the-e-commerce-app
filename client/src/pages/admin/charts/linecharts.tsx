@@ -1,19 +1,15 @@
-import { useSelector } from "react-redux";
+import toast from "react-hot-toast";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
 import { LineChart } from "../../../components/admin/Charts";
-import { getLastMonths } from "../../../utils/features";
-import { UserReducerInitialState } from "../../../types/reducer-types";
+import { Skeleton } from "../../../components/Loader";
 import { useLineQuery } from "../../../redux/api/dashboardAPI";
 import { CustomError } from "../../../types/api-types";
-import toast from "react-hot-toast";
-import { Skeleton } from "../../../components/Loader";
+import { getLastMonths, getUserDetail } from "../../../utils/features";
 
 const { last12Months: months } = getLastMonths();
 
 const Linecharts = () => {
-  const { user } = useSelector(
-    (state: { userReducer: UserReducerInitialState }) => state.userReducer
-  );
+  const user = getUserDetail()!;
 
   const { isLoading, data, isError, error } = useLineQuery(user?._id!);
 

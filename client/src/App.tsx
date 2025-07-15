@@ -1,17 +1,12 @@
-import { onAuthStateChanged } from "firebase/auth";
-import { Suspense, lazy, useEffect } from "react";
+import { Suspense, lazy } from "react";
+import { Helmet } from "react-helmet";
 import { Toaster } from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Header from "./components/Header";
 import Loader from "./components/Loader";
 import ProtectedRoute from "./components/ProtectedRoute";
-import { auth } from "./firebase";
-import { getUser } from "./redux/api/userAPI";
-import { userExist, userNotExist } from "./redux/reducer/userReducer";
-import { UserReducerInitialState } from "./types/reducer-types";
 import Payment from "./pages/Payment";
-import { Helmet } from "react-helmet";
+import { getUserDetail } from "./utils/features";
 
 const Signup = lazy(() => import("./pages/Signup"));
 const Home = lazy(() => import("./pages/Home"));
@@ -43,26 +38,10 @@ const TransactionManagement = lazy(
 );
 
 const App = () => {
-  const dispatch = useDispatch();
-
-  const { user, loading } = useSelector(
-    (state: { userReducer: UserReducerInitialState }) => state.userReducer
-  );
-
-  useEffect(() => {
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const data = await getUser(user.uid);
-        dispatch(userExist(data.user));
-      } else dispatch(userNotExist());
-    });
-  }, []);
-
-  return loading ? (
-    <Loader />
-  ) : (
+  const user = getUserDetail();
+  return (
     <BrowserRouter>
-      <Header user={user} />
+      <Header />
       <Helmet>
         <title>Premium Liquor & Spirits | Your Liquor Shop</title>
         <meta
