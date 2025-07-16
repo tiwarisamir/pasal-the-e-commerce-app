@@ -1,18 +1,42 @@
 .signup {
-  // height: 90vh;
-  margin: 2rem 0;
-  @include flex(column);
+  height: 90vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   > main {
     width: 100%;
     min-height: 600px;
-    max-width: 400px;
+    max-width: 500px;
     padding: 2rem 1.5rem;
     padding-top: 2.5rem;
     padding-bottom: 2.5rem;
     @include baseShadow;
     @include flex(column, center, stretch);
     gap: 1rem;
+
+    .row {
+      display: flex;
+      flex-direction: row;
+      gap: 1rem;
+      width: 100%;
+
+      > div {
+        flex: 1;
+        @include flex(column, flex-start, stretch, 0.5rem);
+
+        > input {
+          @include inputStyle;
+          border: 1px solid rgba(162, 162, 162, 0.53);
+          border-radius: 5px;
+        }
+      }
+
+      @media (max-width: 600px) {
+        flex-direction: column;
+      }
+    }
 
     > div {
       width: 100%;

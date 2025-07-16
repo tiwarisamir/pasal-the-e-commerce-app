@@ -123,26 +123,31 @@ const Signup = () => {
 
         {step === 1 ? (
           <>
-            <div>
-              <label>Name</label>
-              <input
-                type="text"
-                value={form.name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
-              />
-            </div>
-            <div>
-              <label>Email</label>
-              <input
-                type="email"
-                value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
-              />
+            <div className="row">
+              <div>
+                <label>Name</label>
+                <input
+                  type="text"
+                  placeholder="Jhon"
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                />
+              </div>
+              <div>
+                <label>Email</label>
+                <input
+                  type="email"
+                  placeholder="example@email.com"
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                />
+              </div>
             </div>
             <div>
               <label>Password</label>
               <input
                 type="password"
+                placeholder="*********"
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
               />
@@ -151,6 +156,7 @@ const Signup = () => {
               <label>Confirm Password</label>
               <input
                 type="password"
+                placeholder="*********"
                 value={form.confirmPassword}
                 onChange={(e) =>
                   setForm({ ...form, confirmPassword: e.target.value })
