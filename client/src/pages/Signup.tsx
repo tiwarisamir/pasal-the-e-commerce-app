@@ -21,7 +21,7 @@ const Signup = () => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const user = getUserDetail();
-  const [register] = useRegisterMutation();
+  const [register, { isLoading }] = useRegisterMutation();
 
   const navigate = useNavigate();
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -79,7 +79,10 @@ const Signup = () => {
       } else {
         toast.error(res?.data?.message || "Something went wrong");
       }
-    } catch (error) {
+    } catch (error: any) {
+      if (error?.data && error?.data?.message) {
+        toast.error(error?.data?.message || "Something went wrong");
+      }
       toast.error("Something went wrong");
     }
   };
@@ -190,7 +193,10 @@ const Signup = () => {
                 <img src={previewUrl!} alt="Captured" className="preview" />
                 <div className="actions">
                   <button onClick={retakeImage}>Retake</button>
-                  <button onClick={submitHandler}>Submit</button>
+                  <button onClick={submitHandler} disabled={isLoading}>
+                    {" "}
+                    {isLoading ? "Submitting" : "Submit"}
+                  </button>
                 </div>
               </>
             )}
