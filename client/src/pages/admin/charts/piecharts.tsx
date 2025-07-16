@@ -14,7 +14,6 @@ const PieCharts = () => {
   const categories = data?.charts.productCategories!;
   const stock = data?.charts.stockAvailablity!;
   const revenue = data?.charts.revenueDistribution!;
-  const ageGroup = data?.charts.usersAgeGroup!;
   const adminCustomer = data?.charts.adminCustomer!;
 
   if (isError) return <Navigate to={"/admin/dashboard"} />;
@@ -22,7 +21,6 @@ const PieCharts = () => {
     <div className="admin-container">
       <AdminSidebar />
       <main className="chart-container">
-        <h1>Pie & Doughnut Charts</h1>
         {isLoading ? (
           <Skeleton length={15} />
         ) : (
@@ -42,7 +40,6 @@ const PieCharts = () => {
               </div>
               <h2>Order Fulfillment Ratio</h2>
             </section>
-
             <section>
               <div>
                 <DoughnutChart
@@ -60,7 +57,6 @@ const PieCharts = () => {
               </div>
               <h2>Product Categories Ratio</h2>
             </section>
-
             <section>
               <div>
                 <DoughnutChart
@@ -74,7 +70,6 @@ const PieCharts = () => {
               </div>
               <h2> Stock Availability</h2>
             </section>
-
             <section>
               <div>
                 <DoughnutChart
@@ -105,27 +100,6 @@ const PieCharts = () => {
               </div>
               <h2>Revenue Distribution</h2>
             </section>
-
-            <section>
-              <div>
-                <PieChart
-                  labels={[
-                    "Teenager(Below 20)",
-                    "Adult (20-40)",
-                    "Older (above 40)",
-                  ]}
-                  data={[ageGroup.teen, ageGroup.adult, ageGroup.old]}
-                  backgroundColor={[
-                    `hsl(10, ${80}%, 80%)`,
-                    `hsl(10, ${80}%, 50%)`,
-                    `hsl(10, ${40}%, 50%)`,
-                  ]}
-                  offset={[0, 0, 50]}
-                />
-              </div>
-              <h2>Users Age Group</h2>
-            </section>
-
             <section>
               <div>
                 <DoughnutChart

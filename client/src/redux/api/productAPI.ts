@@ -49,13 +49,13 @@ export const productAPI = createApi({
     ),
 
     productDetails: builder.query<ProductsResponse, string>({
-      query: (id) => id,
+      query: (id) => `/api/v1/product/${id}`,
       providesTags: ["product"],
     }),
 
     newProduct: builder.mutation<MessageResponse, NewProductRequest>({
       query: ({ formData, id }) => ({
-        url: `new?id=${id}`,
+        url: `/api/v1/product/new?id=${id}`,
         method: "POST",
         body: formData,
       }),
@@ -64,7 +64,7 @@ export const productAPI = createApi({
 
     updateProduct: builder.mutation<MessageResponse, UpdateProductRequest>({
       query: ({ formData, userId, productId }) => ({
-        url: `${productId}?id=${userId}`,
+        url: `/api/v1/product/${productId}?id=${userId}`,
         method: "PUT",
         body: formData,
       }),
@@ -73,7 +73,7 @@ export const productAPI = createApi({
 
     deleteProduct: builder.mutation<MessageResponse, DeleteProductRequest>({
       query: ({ userId, productId }) => ({
-        url: `${productId}?id=${userId}`,
+        url: `/api/v1/product/${productId}?id=${userId}`,
         method: "DELETE",
       }),
       invalidatesTags: ["product"],

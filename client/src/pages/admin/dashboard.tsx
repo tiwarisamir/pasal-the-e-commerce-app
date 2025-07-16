@@ -1,14 +1,12 @@
 import { BsSearch } from "react-icons/bs";
 import { FaRegBell } from "react-icons/fa";
 import { HiTrendingDown, HiTrendingUp } from "react-icons/hi";
-import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import { Skeleton } from "../../components/Loader";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import { BarChart } from "../../components/admin/Charts";
 import Table from "../../components/admin/DashboardTable";
 import { useStatsQuery } from "../../redux/api/dashboardAPI";
-import { UserReducerInitialState } from "../../types/reducer-types";
 import { getUserDetail } from "../../utils/features";
 
 const userImg =
@@ -35,7 +33,7 @@ const Dashboard = () => {
               <BsSearch />
               <input type="text" placeholder="Search for data, users, docs" />
               <FaRegBell />
-              {/* <img src={user?.photo || userImg} alt="User" /> */}
+              <img src={userImg} alt="User" />
             </div>
 
             <section className="widget-container">

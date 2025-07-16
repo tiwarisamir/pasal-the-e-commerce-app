@@ -1,30 +1,31 @@
 import { ReactElement } from "react";
 import toast from "react-hot-toast";
 import { Navigate, Outlet } from "react-router-dom";
+import { getUserDetail } from "../utils/features";
 
 interface Props {
   children?: ReactElement;
-  isAuth: boolean;
   adminOnly?: boolean;
-  admin?: boolean;
   redirect?: string;
 }
 
 const ProtectedRoute = ({
-  isAuth,
   children,
   adminOnly,
-  admin,
   redirect = "/login",
 }: Props) => {
-  if (!isAuth) {
+  const user = getUserDetail();
+
+  if (!user) {
     toast.error("Please login first!");
     return <Navigate to={redirect} />;
   }
 
-  if (adminOnly && !admin) {
-    toast.error("Please login first!");
-    return <Navigate to={redirect} />;
+  if (adminOnly) {
+    if (user.role !== "admin") {
+      toast.error("You are unauthorized to use this route");
+      return <Navigate to={redirect} />;
+    }
   }
 
   return children ? children : <Outlet />;

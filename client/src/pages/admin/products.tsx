@@ -1,7 +1,6 @@
 import { ReactElement, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FaPlus } from "react-icons/fa";
-import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { Column } from "react-table";
 import { Skeleton } from "../../components/Loader";
@@ -9,7 +8,6 @@ import AdminSidebar from "../../components/admin/AdminSidebar";
 import TableHOC from "../../components/admin/TableHOC";
 import { useAllProductQuery } from "../../redux/api/productAPI";
 import { CustomError } from "../../types/api-types";
-import { UserReducerInitialState } from "../../types/reducer-types";
 import { getUserDetail } from "../../utils/features";
 
 interface DataType {

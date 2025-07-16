@@ -16,7 +16,6 @@ export const register = TryCatch(
   ) => {
     const { name, email, password } = req.body;
     const photo = req.file;
-
     if (!photo)
       return next(
         new ErrorHandler("Your Image is required for age verification.", 400)
@@ -40,7 +39,7 @@ export const register = TryCatch(
       },
     });
 
-    if (!response.data.isAdult) {
+    if (!response.data.is_adult) {
       return next(
         new ErrorHandler(
           "Your age is less than 21 so you cannot sign up in this site",
@@ -56,7 +55,7 @@ export const register = TryCatch(
       email,
       role: "user",
       password: hashedPassword,
-      isAdult: response.data.isAdult,
+      isAdult: response.data.is_adult,
     });
     const token = createToken(newUser._id.toString());
     return res.status(201).json({
@@ -84,7 +83,7 @@ export const login = TryCatch(
   ) => {
     const { email, password } = req.body;
 
-    let user = await User.findOne({ email });
+    let user = await User.findOne({ email }).select("+password");
 
     if (!user) return next(new ErrorHandler("User not found", 404));
 
@@ -112,6 +111,12 @@ export const login = TryCatch(
   }
 );
 
+export const logout = TryCatch(async (req, res, next) => {
+  return res.status(200).json({
+    success: true,
+    message: "Logout successfully",
+  });
+});
 export const getAllUsers = TryCatch(async (req, res, next) => {
   const users = await User.find({});
 

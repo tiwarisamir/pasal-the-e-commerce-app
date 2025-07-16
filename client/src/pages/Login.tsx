@@ -1,11 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../redux/api/userAPI";
-import { responseToast, setAccessToken, setUserDetails } from "../utils/features";
+import {
+  getUserDetail,
+  responseToast,
+  setAccessToken,
+  setUserDetails,
+} from "../utils/features";
 
 const Login = () => {
   const [form, setForm] = useState({ email: "", password: "" });
+  const user = getUserDetail();
+
   const [login] = useLoginMutation();
   const navigate = useNavigate();
 
@@ -28,6 +35,12 @@ const Login = () => {
     }
     responseToast(res, navigate, "/");
   };
+
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user]);
 
   return (
     <div className="login">

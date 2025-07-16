@@ -6,7 +6,6 @@ import Header from "./components/Header";
 import Loader from "./components/Loader";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Payment from "./pages/Payment";
-import { getUserDetail } from "./utils/features";
 
 const Signup = lazy(() => import("./pages/Signup"));
 const Home = lazy(() => import("./pages/Home"));
@@ -38,7 +37,6 @@ const TransactionManagement = lazy(
 );
 
 const App = () => {
-  const user = getUserDetail();
   return (
     <BrowserRouter>
       <Header />
@@ -59,25 +57,11 @@ const App = () => {
           <Route path="/search" element={<Search />} />
           <Route path="/cart" element={<Cart />} />
 
-          <Route
-            path="/login"
-            element={
-              <ProtectedRoute isAuth={user ? false : true}>
-                <Login />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/signup"
-            element={
-              <ProtectedRoute isAuth={user ? false : true}>
-                <Signup />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
 
           {/* Logged in user routes */}
-          <Route element={<ProtectedRoute isAuth={user ? true : false} />}>
+          <Route element={<ProtectedRoute />}>
             <Route path="/shipping" element={<Shipping />} />
             <Route path="/orders" element={<Orders />} />
             <Route path="/pay-fail" element={<Payment />} />
@@ -85,15 +69,7 @@ const App = () => {
           </Route>
 
           {/* Admin Routes */}
-          <Route
-            element={
-              <ProtectedRoute
-                isAuth={true}
-                adminOnly={true}
-                admin={user?.role === "admin" ? true : false}
-              />
-            }
-          >
+          <Route element={<ProtectedRoute adminOnly={true} />}>
             <Route path="/admin/dashboard" element={<Dashboard />} />
             <Route path="/admin/product" element={<Products />} />
             <Route path="/admin/customer" element={<Customers />} />

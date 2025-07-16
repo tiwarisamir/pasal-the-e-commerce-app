@@ -1,8 +1,9 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { useRegisterMutation } from "../redux/api/userAPI";
 import {
+  getUserDetail,
   responseToast,
   setAccessToken,
   setUserDetails,
@@ -18,7 +19,10 @@ const Signup = () => {
   });
   const [image, setImage] = useState<Blob | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  const user = getUserDetail();
   const [register] = useRegisterMutation();
+
   const navigate = useNavigate();
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -107,6 +111,11 @@ const Signup = () => {
     return true;
   };
 
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user]);
   return (
     <div className="signup">
       <main>
