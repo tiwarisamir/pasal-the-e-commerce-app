@@ -11,6 +11,7 @@ import {
 
 const Signup = () => {
   const [step, setStep] = useState(1);
+  const [isCameraStart, setIsCameraStart] = useState(false);
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -32,6 +33,7 @@ const Signup = () => {
     streamRef.current = stream;
     if (videoRef.current) {
       videoRef.current.srcObject = stream;
+      setIsCameraStart(true);
     }
   };
 
@@ -184,8 +186,11 @@ const Signup = () => {
               <>
                 <video autoPlay ref={videoRef}></video>
                 <div className="actions">
-                  <button onClick={startCamera}>Start Camera</button>
-                  <button onClick={captureImage}>Capture</button>
+                  {isCameraStart ? (
+                    <button onClick={captureImage}>Capture</button>
+                  ) : (
+                    <button onClick={startCamera}>Start Camera</button>
+                  )}
                 </div>
               </>
             ) : (
