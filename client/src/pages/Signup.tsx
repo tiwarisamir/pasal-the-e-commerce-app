@@ -1,7 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
-import { useRegisterMutation } from "../redux/api/userAPI";
+import {
+  useCheckModelMutation,
+  useRegisterMutation,
+} from "../redux/api/userAPI";
 import {
   getUserDetail,
   responseToast,
@@ -23,6 +26,7 @@ const Signup = () => {
 
   const user = getUserDetail();
   const [register, { isLoading }] = useRegisterMutation();
+  const [checkModel] = useCheckModelMutation();
 
   const navigate = useNavigate();
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -121,6 +125,13 @@ const Signup = () => {
       navigate("/");
     }
   }, [user]);
+
+  useEffect(() => {
+    const fn = async () => {
+      await checkModel(undefined);
+    };
+    fn();
+  }, []);
   return (
     <div className="signup">
       <main>

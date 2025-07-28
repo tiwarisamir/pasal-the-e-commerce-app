@@ -7,12 +7,12 @@ import NodeCache from "node-cache";
 import { errorMiddleware } from "./middlewares/error.js";
 import { connectDB } from "./utils/features.js";
 
+import { Product } from "./models/products.js";
 import orderRoute from "./routes/order.js";
 import paymentRoute from "./routes/payment.js";
 import productRoute from "./routes/products.js";
 import dashboardRoute from "./routes/stats.js";
 import userRoute from "./routes/user.js";
-import { Product } from "./models/products.js";
 
 config({
   path: "./.env",

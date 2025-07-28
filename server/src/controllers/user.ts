@@ -33,11 +33,15 @@ export const register = TryCatch(
       filename: photo.originalname,
       contentType: photo.mimetype,
     });
-    const response = await axios.post(process.env.AGE_VERIFICATION_URI!, form, {
-      headers: {
-        ...form.getHeaders(),
-      },
-    });
+    const response = await axios.post(
+      `${process.env.AGE_VERIFICATION_URI!}/predict`,
+      form,
+      {
+        headers: {
+          ...form.getHeaders(),
+        },
+      }
+    );
 
     if (!response.data.is_adult) {
       return next(
@@ -149,5 +153,17 @@ export const deleteUser = TryCatch(async (req, res, next) => {
   return res.status(200).json({
     success: true,
     message: "User Deleted Successfully",
+  });
+});
+
+export const checkModelHealth = TryCatch(async (req, res, next) => {
+  const response = await axios.get(
+    `${process.env.AGE_VERIFICATION_URI!}/health`
+  );
+
+  return res.status(200).json({
+    success: true,
+    message: "Health Check completed",
+    data: response.data,
   });
 });

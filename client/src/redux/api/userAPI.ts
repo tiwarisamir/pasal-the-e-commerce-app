@@ -23,6 +23,15 @@ export const userAPI = createApi({
       }),
       invalidatesTags: ["users"],
     }),
+    checkModel: builder.mutation({
+      query: () => ({
+        url: "/api/v1/user/check-model",
+        method: "POST",
+      }),
+    }),
+    chkModel: builder.query({
+      query: () => "/api/v1/user/check-model",
+    }),
     register: builder.mutation<ILoginResponse, FormData>({
       query: (user) => ({
         url: "/api/v1/user/register",
@@ -71,4 +80,6 @@ export const {
   useDeleteUserMutation,
   useRegisterMutation,
   useLogoutMutation,
+  useCheckModelMutation,
+  useChkModelQuery,
 } = userAPI;
