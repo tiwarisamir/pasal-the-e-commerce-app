@@ -61,24 +61,24 @@ const Transaction = () => {
     if (data)
       setRows(
         data.orders?.map((i) => ({
-          user: i.user.name || "",
-          amount: i.total,
-          discount: i.discount,
-          quantity: i.orderItems.length,
+          user: i?.user?.name || "N/A",
+          amount: i?.total,
+          discount: i?.discount,
+          quantity: i?.orderItems?.length,
           status: (
             <span
               className={
-                i.status === "Processing"
+                i?.status === "Processing"
                   ? "red"
-                  : i.status === "Shipped"
+                  : i?.status === "Shipped"
                   ? "green"
                   : "purple"
               }
             >
-              {i.status}
+              {i?.status}
             </span>
           ),
-          action: <Link to={`/admin/transaction/${i._id}`}>Manage</Link>,
+          action: <Link to={`/admin/transaction/${i?._id}`}>Manage</Link>,
         }))
       );
   }, [data]);

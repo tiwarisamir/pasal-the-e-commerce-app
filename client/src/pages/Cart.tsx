@@ -125,7 +125,11 @@ const Cart = () => {
             </span>
           ))}
 
-        {cartItems.length > 0 && <Link to="/shipping">Checkout</Link>}
+        {cartItems.length > 0 ? (
+          <Link to="/shipping">Checkout</Link>
+        ) : (
+          <p className="empty-cart">Please add at least one item to cart</p>
+        )}
       </aside>
     </div>
   );

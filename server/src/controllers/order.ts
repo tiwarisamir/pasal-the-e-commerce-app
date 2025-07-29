@@ -170,13 +170,15 @@ export const allOrder = TryCatch(async (req, res, next) => {
 export const getSingleOrder = TryCatch(async (req, res, next) => {
   const { _id: id } = req.user!;
 
-  const key = `order-${id}`;
+  const { id: orderId } = req.params;
+
+  const key = `order-${orderId}`;
 
   let order;
 
   if (myCache.has(key)) order = JSON.parse(myCache.get(key) as string);
   else {
-    order = await Order.findById(id).populate("user", "name");
+    order = await Order.findById(orderId).populate("user", "name");
 
     if (!order) return next(new ErrorHandler("Order Not Found", 404));
 

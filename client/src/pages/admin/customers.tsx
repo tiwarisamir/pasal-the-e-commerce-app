@@ -22,10 +22,6 @@ interface DataType {
 
 const columns: Column<DataType>[] = [
   {
-    Header: "Avatar",
-    accessor: "avatar",
-  },
-  {
     Header: "Name",
     accessor: "name",
   },

@@ -52,6 +52,10 @@
         align-self: flex-end;
       }
     }
+    > .empty-cart {
+      color: red;
+      text-align: center;
+    }
   }
 }
 

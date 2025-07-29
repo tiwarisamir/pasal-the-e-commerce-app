@@ -1,0 +1,50 @@
+.error-boundary {
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  background-color: #f3f4f6; // Tailwind's bg-gray-100
+
+  &__box {
+    text-align: center;
+  }
+
+  &__heading {
+    font-size: 2.25rem; // text-4xl
+    font-weight: 700; // font-bold
+    color: #ef4444; // text-red-500
+  }
+
+  &__message {
+    margin-top: 0.5rem;
+    font-size: 1.125rem; // text-lg
+    color: #4b5563; // text-gray-600
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1.25rem;
+
+    @media (min-width: 768px) {
+      flex-direction: row;
+    }
+
+    button {
+      background-color: $color3;
+      padding: 1rem;
+      text-decoration: none;
+      color: $color1;
+      @include flex;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      border-radius: 5px;
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+  }
+}

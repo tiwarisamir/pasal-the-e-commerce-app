@@ -1,5 +1,5 @@
 import { FaTrash } from "react-icons/fa";
-import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Skeleton } from "../../../components/Loader";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
 import {
@@ -7,7 +7,6 @@ import {
   useOrderDetailsQuery,
   useUpdateOrderMutation,
 } from "../../../redux/api/orderAPI";
-import { SERVER } from "../../../redux/store";
 import { Order, OrderItem } from "../../../types/types";
 import { getUserDetail, responseToast } from "../../../utils/features";
 
@@ -70,13 +69,13 @@ const TransactionManagement = () => {
     responseToast(res, navigate, "/admin/transaction");
   };
 
-  if (isError) return <Navigate to={"/404"} />;
-
   return (
     <div className="admin-container">
       <AdminSidebar />
       <main className="product-management">
-        {isLoading ? (
+        {isError ? (
+          <p>Something went wrong!</p>
+        ) : isLoading ? (
           <Skeleton />
         ) : (
           <>
@@ -89,13 +88,13 @@ const TransactionManagement = () => {
 
               {orderItems.map((i) => (
                 <ProductCard
-                  key={i._id}
-                  name={i.name}
-                  photo={`${SERVER}/${i.photo}`}
-                  productId={i.productId}
-                  _id={i._id}
-                  quantity={i.quantity}
-                  price={i.price}
+                  key={i?._id}
+                  name={i?.name}
+                  photo={i?.photo}
+                  productId={i?.productId}
+                  _id={i?._id}
+                  quantity={i?.quantity}
+                  price={i?.price}
                 />
               ))}
             </section>
