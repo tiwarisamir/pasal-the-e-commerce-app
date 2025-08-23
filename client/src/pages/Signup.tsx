@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -7,7 +7,6 @@ import {
 } from "../redux/api/userAPI";
 import {
   getUserDetail,
-  responseToast,
   setAccessToken,
   setUserDetails,
 } from "../utils/features";
@@ -75,21 +74,18 @@ const Signup = () => {
       formData.append("email", form.email);
       formData.append("password", form.password);
       formData.append("photo", image);
-      const res = await register(formData);
-      if (res?.data?.success) {
-        const { token, user } = res?.data?.data!;
-        setAccessToken(token);
-        setUserDetails(user);
-        responseToast(res, navigate, "/");
-        toast.success(res?.data?.message || "Account registered successfully!");
-      } else {
-        toast.error(res?.data?.message || "Something went wrong");
-      }
+      const res = await register(formData).unwrap();
+      const { token, user } = res?.data!;
+      setAccessToken(token);
+      setUserDetails(user);
+      navigate("/");
+      toast.success("Account registered successfully!");
     } catch (error: any) {
       if (error?.data && error?.data?.message) {
         toast.error(error?.data?.message || "Something went wrong");
+      } else {
+        toast.error("Something went wrong");
       }
-      toast.error("Something went wrong");
     }
   };
 
