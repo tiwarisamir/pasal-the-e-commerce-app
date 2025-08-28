@@ -6,11 +6,20 @@ import { TryCatch } from "../middlewares/error.js";
 import { Product } from "../models/products.js";
 import {
   BaseQuery,
+  IJwtPayload,
   NewProductRequestBody,
   SearchRequestQuery,
 } from "../types/types.js";
-import { invalidateCache, uploadFileToCloudinary } from "../utils/features.js";
+import {
+  invalidateCache,
+  uploadFileToCloudinary,
+  verifyToken,
+} from "../utils/features.js";
 import ErrorHandler from "../utils/utility-class.js";
+import jwt from "jsonwebtoken";
+import { decode } from "punycode";
+import { Order } from "../models/order.js";
+import { Types } from "mongoose";
 
 interface MulterRequest<B = any> extends Request<{}, {}, B> {
   file?: Express.Multer.File;
@@ -45,6 +54,64 @@ export const newProduct = TryCatch(
     });
   }
 );
+
+export const getRecommendedProducts = TryCatch(async (req, res, next) => {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+  if (!token) return next(new ErrorHandler("Please Login First", 401));
+
+  const userId = verifyToken(token);
+
+  let categories: string[] = [];
+
+  if (userId) {
+    const orders = await Order.find({ user: userId }).populate(
+      "orderItems.productId"
+    );
+
+    const categoryCounts: Record<string, number> = {};
+
+    orders.forEach((order) => {
+      order.orderItems.forEach((item: any) => {
+        const cat = item.productId?.category;
+        if (cat) {
+          categoryCounts[cat] = (categoryCounts[cat] || 0) + item.quantity;
+        }
+      });
+    });
+
+    categories = Object.keys(categoryCounts).sort(
+      (a, b) => categoryCounts[b] - categoryCounts[a]
+    );
+  }
+
+  if (categories.length === 0) {
+    const randomProductArr = await Product.aggregate([
+      { $sample: { size: 3 } },
+    ]);
+
+    if (randomProductArr.length > 0) {
+      categories = [...new Set(randomProductArr.map((p) => p.category))];
+    }
+  }
+
+  if (categories.length === 0)
+    return res.status(200).json({
+      success: true,
+      products: [],
+    });
+
+  const recommendations = await Product.find({
+    category: { $in: categories },
+  })
+    .limit(8)
+    .exec();
+
+  return res.status(200).json({
+    success: true,
+    products: recommendations,
+  });
+});
 
 export const getLatestProducts = TryCatch(async (req, res, next) => {
   let products;

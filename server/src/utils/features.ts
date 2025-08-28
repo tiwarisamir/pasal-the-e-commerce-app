@@ -4,7 +4,11 @@ import mongoose, { Document } from "mongoose";
 import { v4 as uuid } from "uuid";
 import { myCache } from "../app.js";
 import { Product } from "../models/products.js";
-import { InvalidateCacheProps, OrderItemType } from "../types/types.js";
+import {
+  IJwtPayload,
+  InvalidateCacheProps,
+  OrderItemType,
+} from "../types/types.js";
 import jwt from "jsonwebtoken";
 
 export const connectDB = () => {
@@ -176,4 +180,16 @@ export const createToken = (id: string) => {
     expiresIn: "1d",
   });
   return token;
+};
+
+export const verifyToken = (token: string) => {
+  try {
+    const { _id: userId } = jwt.verify(
+      token,
+      process.env.JWT_SECRET!
+    ) as IJwtPayload;
+    return userId;
+  } catch (error) {
+    return null;
+  }
 };
