@@ -89,7 +89,7 @@ export const getRecommendedProducts = TryCatch(async (req, res, next) => {
 
   if (categories.length === 0) {
     const randomProductArr = await Product.aggregate([
-      { $sample: { size: 3 } },
+      { $sample: { size: 2 } },
     ]);
 
     if (randomProductArr.length > 0) {
@@ -106,7 +106,7 @@ export const getRecommendedProducts = TryCatch(async (req, res, next) => {
   const recommendations = await Product.find({
     category: { $in: categories },
   })
-    .limit(8)
+    .limit(15)
     .exec();
 
   return res.status(200).json({
