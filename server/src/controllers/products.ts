@@ -58,9 +58,11 @@ export const newProduct = TryCatch(
 export const getRecommendedProducts = TryCatch(async (req, res, next) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
-  if (!token) return next(new ErrorHandler("Please Login First", 401));
 
-  const userId = verifyToken(token);
+  let userId;
+  if (token) {
+    userId = verifyToken(token);
+  }
 
   let categories: string[] = [];
 
