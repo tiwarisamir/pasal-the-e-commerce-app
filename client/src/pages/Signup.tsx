@@ -45,18 +45,32 @@ const Signup = () => {
   };
 
   const captureImage = () => {
-    const canvas = document.createElement("canvas");
     const video = videoRef.current!;
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    canvas.getContext("2d")?.drawImage(video, 0, 0);
+    const canvas = document.createElement("canvas");
+
+    // take smallest side to ensure square
+    const size = Math.min(video.videoWidth, video.videoHeight);
+
+    canvas.width = size;
+    canvas.height = size;
+
+    const ctx = canvas.getContext("2d");
+
+    if (ctx) {
+      // center crop
+      const offsetX = (video.videoWidth - size) / 2;
+      const offsetY = (video.videoHeight - size) / 2;
+
+      ctx.drawImage(video, offsetX, offsetY, size, size, 0, 0, size, size);
+    }
+
     canvas.toBlob((blob) => {
       if (blob) {
         setImage(blob);
         setPreviewUrl(URL.createObjectURL(blob));
         stopCamera();
       }
-    });
+    }, "image/jpeg");
   };
 
   const retakeImage = () => {
@@ -74,6 +88,7 @@ const Signup = () => {
       formData.append("email", form.email);
       formData.append("password", form.password);
       formData.append("photo", image);
+
       const res = await register(formData).unwrap();
       const { token, user } = res?.data!;
       setAccessToken(token);
@@ -128,6 +143,7 @@ const Signup = () => {
     };
     fn();
   }, []);
+
   return (
     <div className="signup">
       <main>
@@ -191,8 +207,16 @@ const Signup = () => {
           <>
             {!image ? (
               <>
-                <video autoPlay ref={videoRef}></video>
-                <div className="actions">
+                <div className="relative w-64 h-64 mx-auto">
+                  <video
+                    autoPlay
+                    ref={videoRef}
+                    className="w-full h-full object-cover rounded-md"
+                  />
+                  <div className="absolute inset-0 border-2 border-white pointer-events-none rounded-md"></div>
+                </div>
+
+                <div className="actions mt-4">
                   {isCameraStart ? (
                     <button onClick={captureImage}>Capture</button>
                   ) : (
@@ -206,7 +230,6 @@ const Signup = () => {
                 <div className="actions">
                   <button onClick={retakeImage}>Retake</button>
                   <button onClick={submitHandler} disabled={isLoading}>
-                    {" "}
                     {isLoading ? "Submitting" : "Submit"}
                   </button>
                 </div>
