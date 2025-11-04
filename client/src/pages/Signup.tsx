@@ -212,6 +212,7 @@ const Signup = () => {
                     autoPlay
                     ref={videoRef}
                     className="w-full h-full object-cover rounded-md"
+                    style={{ transform: "scaleX(-1)" }}
                   />
                   <div className="absolute inset-0 border-2 border-white pointer-events-none rounded-md"></div>
                 </div>
