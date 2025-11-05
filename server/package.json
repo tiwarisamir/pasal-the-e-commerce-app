@@ -8,7 +8,7 @@
     "start": "node dist/app.js",
     "build": "tsc",
     "watch": "tsc -w",
-    "dev": "nodemon dist/app.js"
+    "dev": "nodemon --exec \"npm run start\" --ext ts watch src || exit 1"
   },
   "author": "",
   "license": "ISC",
