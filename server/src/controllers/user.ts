@@ -46,7 +46,7 @@ export const register = TryCatch(
     if (!response.data.is_adult) {
       return next(
         new ErrorHandler(
-          "Your age is less than 21 so you cannot sign up in this site",
+          "Your age is less than 18 so you cannot sign up in this site",
           403
         )
       );

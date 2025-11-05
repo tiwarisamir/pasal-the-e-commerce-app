@@ -94,10 +94,14 @@ const Signup = () => {
       setAccessToken(token);
       setUserDetails(user);
       navigate("/");
-      toast.success("Account registered successfully!");
+      toast.success("Account registered successfully!", {
+        duration: 7000,
+      });
     } catch (error: any) {
       if (error?.data && error?.data?.message) {
-        toast.error(error?.data?.message || "Something went wrong");
+        toast.error(error?.data?.message || "Something went wrong", {
+          duration: 7000,
+        });
       } else {
         toast.error("Something went wrong");
       }
@@ -229,9 +233,9 @@ const Signup = () => {
               <>
                 <img src={previewUrl!} alt="Captured" className="preview" />
                 <div className="actions">
-                  <button onClick={retakeImage}>Retake</button>
+                  {!isLoading && <button onClick={retakeImage}>Retake</button>}
                   <button onClick={submitHandler} disabled={isLoading}>
-                    {isLoading ? "Submitting" : "Submit"}
+                    {isLoading ? "Submitting..." : "Submit"}
                   </button>
                 </div>
               </>

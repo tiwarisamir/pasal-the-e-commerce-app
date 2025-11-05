@@ -73,7 +73,9 @@
       margin-top: 1rem;
 
       > button {
-        flex: 1;
+        // flex: 1;
+        height: 3rem;
+        margin-top: 1rem;
         @include btn(unset, rgb(62, 125, 242), white);
         border-radius: 5px;
       }
