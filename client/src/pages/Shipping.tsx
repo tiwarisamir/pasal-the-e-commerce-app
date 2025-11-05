@@ -36,6 +36,16 @@ const Shipping = () => {
   };
 
   const submitHandler = async () => {
+    if (
+      !shippingInfo.address ||
+      !shippingInfo.city ||
+      !shippingInfo.state ||
+      !shippingInfo.country ||
+      !shippingInfo.pinCode
+    ) {
+      toast.error("Please fill all data");
+      return;
+    }
     dispatch(saveShippingInfo(shippingInfo));
 
     const order = {
@@ -60,6 +70,16 @@ const Shipping = () => {
   };
 
   const handlePay = async () => {
+    if (
+      !shippingInfo.address ||
+      !shippingInfo.city ||
+      !shippingInfo.state ||
+      !shippingInfo.country ||
+      !shippingInfo.pinCode
+    ) {
+      toast.error("Please fill all data");
+      return;
+    }
     dispatch(saveShippingInfo(shippingInfo));
 
     const order = {
